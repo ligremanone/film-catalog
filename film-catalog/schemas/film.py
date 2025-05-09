@@ -5,13 +5,13 @@ from pydantic import BaseModel
 
 
 class FilmBase(BaseModel):
+    slug: str
     name: str
     description: str
     year: int
 
 
 class Film(FilmBase):
-    id: int
     rating: float
 
 
