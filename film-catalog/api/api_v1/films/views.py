@@ -1,7 +1,7 @@
 from typing import Annotated
 
 from fastapi import Depends, APIRouter, status
-from api.api_v1.films.crud import FILMS
+from api.api_v1.films.crud import storage
 from api.api_v1.films.dependencies import prefetch_film
 from schemas.film import Film, FilmCreate
 
@@ -16,7 +16,7 @@ router = APIRouter(
     response_model=list[Film],
 )
 async def get_all_films():
-    return FILMS
+    return storage.get()
 
 
 @router.get("/{slug}")
@@ -37,7 +37,4 @@ async def get_film_by_slug(
 async def create_film(
     new_film: FilmCreate,
 ):
-    return Film(
-        **new_film.model_dump(),
-        rating=0,
-    )
+    return storage.create(new_film)

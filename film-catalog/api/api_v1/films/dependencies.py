@@ -1,14 +1,11 @@
 from fastapi import HTTPException, status
 
-from api.api_v1.films.crud import FILMS
+from api.api_v1.films.crud import storage
 from schemas.film import Film
 
 
 async def prefetch_film(slug: str) -> Film:
-    film: Film | None = next(
-        (film for film in FILMS if film.slug == slug),
-        None,
-    )
+    film = storage.get_by_slug(slug)
     if film:
         return film
     raise HTTPException(
