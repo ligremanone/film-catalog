@@ -38,3 +38,28 @@ async def create_film(
     new_film: FilmCreate,
 ):
     return storage.create(new_film)
+
+
+@router.delete(
+    "/{slug}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses={
+        status.HTTP_404_NOT_FOUND: {
+            "description": "Film not found",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "detail": "Film with 'slug' slug not found",
+                    },
+                },
+            },
+        },
+    },
+)
+async def delete_film(
+    film: Annotated[
+        Film,
+        Depends(prefetch_film),
+    ],
+):
+    storage.delete(film)

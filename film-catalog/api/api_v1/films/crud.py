@@ -17,6 +17,12 @@ class FilmCatalogStorage(BaseModel):
         self.slug_to_film[new_film.slug] = new_film
         return new_film
 
+    def delete_by_slug(self, slug: str) -> None:
+        self.slug_to_film.pop(slug, None)
+
+    def delete(self, film: Film) -> None:
+        self.delete_by_slug(slug=film.slug)
+
 
 storage = FilmCatalogStorage()
 storage.create(
