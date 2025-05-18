@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from schemas.film import Film, FilmCreate, FilmUpdate
+from schemas.film import Film, FilmCreate, FilmUpdate, FilmUpdatePartial
 
 
 class FilmCatalogStorage(BaseModel):
@@ -25,6 +25,15 @@ class FilmCatalogStorage(BaseModel):
 
     def updade(self, film: Film, film_update: FilmUpdate) -> Film:
         for field_name, value in film_update:
+            setattr(film, field_name, value)
+        return film
+
+    def update_partial(
+        self, film: Film, film_update_partial: FilmUpdatePartial
+    ) -> Film:
+        for field_name, value in film_update_partial.model_dump(
+            exclude_unset=True
+        ).items():
             setattr(film, field_name, value)
         return film
 

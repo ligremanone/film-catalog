@@ -1,7 +1,20 @@
 from typing import Annotated
 from datetime import datetime
-from annotated_types import Len, Interval
+from annotated_types import Len, Interval, MaxLen
 from pydantic import BaseModel
+
+NameString = Annotated[
+    str,
+    Len(min_length=1, max_length=100),
+]
+YearNumber = Annotated[
+    int,
+    Interval(ge=1895, le=datetime.now().year + 5),
+]
+DescriptionString = Annotated[
+    str,
+    MaxLen(256),
+]
 
 
 class FilmBase(BaseModel):
@@ -17,15 +30,18 @@ class Film(FilmBase):
 
 class FilmCreate(FilmBase):
     slug: str
-    name: Annotated[
-        str,
-        Len(min_length=1, max_length=100),
-    ]
-    year: Annotated[
-        int,
-        Interval(ge=1895, le=datetime.now().year + 5),
-    ]
+    name: NameString
+    year: YearNumber
+    description: DescriptionString
 
 
 class FilmUpdate(FilmBase):
-    pass
+    name: NameString
+    year: YearNumber
+    description: DescriptionString
+
+
+class FilmUpdatePartial(FilmBase):
+    name: NameString | None = None
+    year: YearNumber | None = None
+    description: DescriptionString | None = None
