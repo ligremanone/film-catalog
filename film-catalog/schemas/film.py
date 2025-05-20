@@ -26,6 +26,15 @@ class FilmBase(BaseModel):
 class Film(FilmBase):
     slug: str
     rating: float
+    notes: Annotated[
+        str,
+        MaxLen(256),
+    ] = ""
+
+
+class FilmRead(FilmBase):
+    slug: str
+    rating: float
 
 
 class FilmCreate(FilmBase):

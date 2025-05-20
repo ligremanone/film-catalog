@@ -1,6 +1,6 @@
 from fastapi import APIRouter, status
 from api.api_v1.films.crud import storage
-from schemas.film import Film, FilmCreate
+from schemas.film import Film, FilmCreate, FilmRead
 
 router = APIRouter(
     prefix="/films",
@@ -10,7 +10,7 @@ router = APIRouter(
 
 @router.get(
     "/",
-    response_model=list[Film],
+    response_model=list[FilmRead],
 )
 async def get_all_films():
     return storage.get()

@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, status
 
 from api.api_v1.films.crud import storage
 from api.api_v1.films.dependencies import prefetch_film
-from schemas.film import Film, FilmUpdate, FilmUpdatePartial
+from schemas.film import Film, FilmUpdate, FilmUpdatePartial, FilmRead
 
 router = APIRouter(
     prefix="/{slug}",
@@ -25,7 +25,7 @@ router = APIRouter(
 FilmBySlug = Annotated[Film, Depends(prefetch_film)]
 
 
-@router.get("/")
+@router.get("/", response_model=FilmRead,)
 async def get_film_by_slug(
     film: FilmBySlug,
 ):
