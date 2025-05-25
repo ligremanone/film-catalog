@@ -1,6 +1,7 @@
 import json
+from json import JSONDecodeError
 from pathlib import Path
-
+import logging
 from pydantic import BaseModel
 
 from core.config import DB_PATH
@@ -10,6 +11,8 @@ from schemas.film import (
     FilmUpdate,
     FilmUpdatePartial,
 )
+
+log = logging.getLogger(__name__)
 
 
 class FilmCatalogStorage(BaseModel):
@@ -27,10 +30,15 @@ class FilmCatalogStorage(BaseModel):
                 indent=4,
                 ensure_ascii=False,
             )
+        log.info(
+            "Data saved to %s",
+            DB_PATH,
+        )
 
     @classmethod
     def from_data(cls) -> "FilmCatalogStorage":
         if not Path(DB_PATH).exists():
+            log.info("Data not found")
             return FilmCatalogStorage()
         with open(DB_PATH, "r", encoding="utf-8") as file:
             data = json.load(file)
@@ -46,6 +54,10 @@ class FilmCatalogStorage(BaseModel):
         new_film = Film(**new_film_in.model_dump(), rating=0)
         self.slug_to_film[new_film.slug] = new_film
         self.save_data()
+        log.info(
+            "Film '%s' created",
+            new_film.name,
+        )
         return new_film
 
     def delete_by_slug(self, slug: str) -> None:
@@ -74,6 +86,8 @@ class FilmCatalogStorage(BaseModel):
 
 try:
     storage = FilmCatalogStorage().from_data()
-except ValueError:
+    log.warning("Loaded films from storage file")
+except JSONDecodeError:
     storage = FilmCatalogStorage()
     storage.save_data()
+    log.warning("Rewritten films storage file due to JSONDecodeError")

@@ -1,6 +1,13 @@
 from fastapi import FastAPI, Request
 from api import router as api_router
+import logging
 
+from core.config import LOG_LEVEL, LOG_FORMAT
+
+logging.basicConfig(
+    level=LOG_LEVEL,
+    format=LOG_FORMAT,
+)
 app = FastAPI(
     name="Film Catalog",
     title="Film Catalog",
