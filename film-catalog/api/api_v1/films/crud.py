@@ -83,11 +83,15 @@ class FilmCatalogStorage(BaseModel):
         self.save_data()
         return film
 
+    def init_storage_from_data(self):
+        try:
+            data = FilmCatalogStorage().from_data()
+        except JSONDecodeError:
+            self.save_data()
+            log.warning("Rewritten films storage file due to JSONDecodeError")
+            return
+        self.slug_to_film.update(data.slug_to_film)
+        log.warning("Loaded films from storage file")
 
-try:
-    storage = FilmCatalogStorage().from_data()
-    log.warning("Loaded films from storage file")
-except JSONDecodeError:
-    storage = FilmCatalogStorage()
-    storage.save_data()
-    log.warning("Rewritten films storage file due to JSONDecodeError")
+
+storage = FilmCatalogStorage()
