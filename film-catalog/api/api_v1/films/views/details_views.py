@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, status, BackgroundTasks
 
 from api.api_v1.films.crud import storage
 from api.api_v1.films.dependencies import prefetch_film
@@ -25,7 +25,10 @@ router = APIRouter(
 FilmBySlug = Annotated[Film, Depends(prefetch_film)]
 
 
-@router.get("/", response_model=FilmRead,)
+@router.get(
+    "/",
+    response_model=FilmRead,
+)
 async def get_film_by_slug(
     film: FilmBySlug,
 ):
@@ -38,7 +41,9 @@ async def get_film_by_slug(
 )
 async def delete_film(
     film: FilmBySlug,
+    background_tasks: BackgroundTasks,
 ):
+    background_tasks.add_task(storage.save_data)
     storage.delete(film)
 
 
@@ -49,8 +54,10 @@ async def delete_film(
 async def update_film_detail(
     film: FilmBySlug,
     film_update: FilmUpdate,
+    background_tasks: BackgroundTasks,
 ) -> Film:
-    return storage.updade(film, film_update)
+    background_tasks.add_task(storage.save_data)
+    return storage.update(film, film_update)
 
 
 @router.patch(
@@ -60,7 +67,9 @@ async def update_film_detail(
 async def update_film_partial(
     film: FilmBySlug,
     film_update_partial: FilmUpdatePartial,
+    background_tasks: BackgroundTasks,
 ) -> Film:
+    background_tasks.add_task(storage.save_data)
     return storage.update_partial(
         film,
         film_update_partial,

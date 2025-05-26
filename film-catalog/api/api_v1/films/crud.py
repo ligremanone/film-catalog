@@ -31,8 +31,7 @@ class FilmCatalogStorage(BaseModel):
                 ensure_ascii=False,
             )
         log.info(
-            "Data saved to %s",
-            DB_PATH,
+            "Saved films to storage file",
         )
 
     @classmethod
@@ -53,7 +52,6 @@ class FilmCatalogStorage(BaseModel):
     def create(self, new_film_in: FilmCreate) -> Film:
         new_film = Film(**new_film_in.model_dump(), rating=0)
         self.slug_to_film[new_film.slug] = new_film
-        self.save_data()
         log.info(
             "Film '%s' created",
             new_film.name,
@@ -61,7 +59,6 @@ class FilmCatalogStorage(BaseModel):
         return new_film
 
     def delete_by_slug(self, slug: str) -> None:
-        self.save_data()
         self.slug_to_film.pop(slug, None)
 
     def delete(self, film: Film) -> None:
@@ -70,7 +67,6 @@ class FilmCatalogStorage(BaseModel):
     def update(self, film: Film, film_update: FilmUpdate) -> Film:
         for field_name, value in film_update:
             setattr(film, field_name, value)
-        self.save_data()
         return film
 
     def update_partial(
@@ -80,7 +76,6 @@ class FilmCatalogStorage(BaseModel):
             exclude_unset=True
         ).items():
             setattr(film, field_name, value)
-        self.save_data()
         return film
 
     def init_storage_from_data(self):

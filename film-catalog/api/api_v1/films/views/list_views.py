@@ -1,4 +1,4 @@
-from fastapi import APIRouter, status
+from fastapi import APIRouter, status, BackgroundTasks
 from api.api_v1.films.crud import storage
 from schemas.film import Film, FilmCreate, FilmRead
 
@@ -23,5 +23,7 @@ async def get_all_films():
 )
 async def create_film(
     new_film: FilmCreate,
+    background_tasks: BackgroundTasks,
 ):
+    background_tasks.add_task(storage.save_data)
     return storage.create(new_film)
