@@ -1,7 +1,11 @@
-from fastapi import HTTPException, status
+import logging
+
+from fastapi import HTTPException, status, BackgroundTasks, Request
 
 from api.api_v1.films.crud import storage
 from schemas.film import Film
+
+log = logging.getLogger(__name__)
 
 
 async def prefetch_film(slug: str) -> Film:
@@ -13,3 +17,14 @@ async def prefetch_film(slug: str) -> Film:
         status_code=status.HTTP_404_NOT_FOUND,
         detail=f"Film with {slug!r} slug not found",
     )
+
+
+def save_storage_data(
+    background_tasks: BackgroundTasks,
+    request: Request,
+):
+    yield
+    if request.method == "GET":
+        return
+    log.info("Add background task to save data")
+    background_tasks.add_task(storage.save_data)

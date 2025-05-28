@@ -41,9 +41,7 @@ async def get_film_by_slug(
 )
 async def delete_film(
     film: FilmBySlug,
-    background_tasks: BackgroundTasks,
 ):
-    background_tasks.add_task(storage.save_data)
     storage.delete(film)
 
 
@@ -54,9 +52,7 @@ async def delete_film(
 async def update_film_detail(
     film: FilmBySlug,
     film_update: FilmUpdate,
-    background_tasks: BackgroundTasks,
 ) -> Film:
-    background_tasks.add_task(storage.save_data)
     return storage.update(film, film_update)
 
 
@@ -67,9 +63,7 @@ async def update_film_detail(
 async def update_film_partial(
     film: FilmBySlug,
     film_update_partial: FilmUpdatePartial,
-    background_tasks: BackgroundTasks,
 ) -> Film:
-    background_tasks.add_task(storage.save_data)
     return storage.update_partial(
         film,
         film_update_partial,
