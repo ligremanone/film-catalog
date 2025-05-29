@@ -7,6 +7,15 @@ from schemas.film import Film
 
 log = logging.getLogger(__name__)
 
+UNSAFE_METHODS = frozenset(
+    {
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE",
+    }
+)
+
 
 async def prefetch_film(slug: str) -> Film:
     film = storage.get_by_slug(slug)
@@ -24,7 +33,7 @@ def save_storage_data(
     request: Request,
 ):
     yield
-    if request.method == "GET":
+    if request.method not in UNSAFE_METHODS:
         return
     log.info("Add background task to save data")
     background_tasks.add_task(storage.save_data)

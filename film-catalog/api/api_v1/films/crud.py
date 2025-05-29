@@ -53,7 +53,7 @@ class FilmCatalogStorage(BaseModel):
         new_film = Film(**new_film_in.model_dump(), rating=0)
         self.slug_to_film[new_film.slug] = new_film
         log.info(
-            "Film '%s' created",
+            "Film %r created",
             new_film.name,
         )
         return new_film
