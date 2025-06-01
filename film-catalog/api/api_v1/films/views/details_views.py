@@ -3,7 +3,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, status, BackgroundTasks
 
 from api.api_v1.films.crud import storage
-from api.api_v1.films.dependencies import prefetch_film
+from api.api_v1.films.dependencies import prefetch_film, check_api_token
 from schemas.film import Film, FilmUpdate, FilmUpdatePartial, FilmRead
 
 router = APIRouter(
@@ -41,6 +41,7 @@ async def get_film_by_slug(
 )
 async def delete_film(
     film: FilmBySlug,
+    _=Depends(check_api_token),
 ):
     storage.delete(film)
 
@@ -52,6 +53,7 @@ async def delete_film(
 async def update_film_detail(
     film: FilmBySlug,
     film_update: FilmUpdate,
+    _=Depends(check_api_token),
 ) -> Film:
     return storage.update(film, film_update)
 
@@ -63,6 +65,7 @@ async def update_film_detail(
 async def update_film_partial(
     film: FilmBySlug,
     film_update_partial: FilmUpdatePartial,
+    _=Depends(check_api_token),
 ) -> Film:
     return storage.update_partial(
         film,

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, status, BackgroundTasks, Depends
 from api.api_v1.films.crud import storage
-from api.api_v1.films.dependencies import save_storage_data
+from api.api_v1.films.dependencies import save_storage_data, check_api_token
 from schemas.film import Film, FilmCreate, FilmRead
 
 router = APIRouter(
@@ -9,6 +9,18 @@ router = APIRouter(
     dependencies=[
         Depends(save_storage_data),
     ],
+    responses={
+        status.HTTP_403_FORBIDDEN: {
+            "description": "Invalid API token",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "detail": "Invalid API token",
+                    },
+                },
+            },
+        },
+    },
 )
 
 
@@ -27,5 +39,6 @@ async def get_all_films():
 )
 async def create_film(
     new_film: FilmCreate,
+    _=Depends(check_api_token),
 ):
     return storage.create(new_film)

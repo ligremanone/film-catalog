@@ -1,8 +1,10 @@
 import logging
+from typing import Annotated
 
-from fastapi import HTTPException, status, BackgroundTasks, Request
+from fastapi import HTTPException, status, BackgroundTasks, Request, Query
 
 from api.api_v1.films.crud import storage
+from core.config import API_TOKENS
 from schemas.film import Film
 
 log = logging.getLogger(__name__)
@@ -37,3 +39,11 @@ def save_storage_data(
         return
     log.info("Add background task to save data")
     background_tasks.add_task(storage.save_data)
+
+
+def check_api_token(api_token: Annotated[str, Query]):
+    if api_token not in API_TOKENS:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Invalid API token",
+        )
