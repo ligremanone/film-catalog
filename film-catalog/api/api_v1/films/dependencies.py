@@ -1,7 +1,7 @@
 import logging
 from typing import Annotated
 
-from fastapi import HTTPException, status, BackgroundTasks, Request, Query
+from fastapi import HTTPException, status, BackgroundTasks, Request, Query, Header
 
 from api.api_v1.films.crud import storage
 from core.config import API_TOKENS
@@ -41,9 +41,14 @@ def save_storage_data(
     background_tasks.add_task(storage.save_data)
 
 
-def check_api_token(api_token: Annotated[str, Query]):
+def check_api_token_for_unsafe_methods(
+    request: Request,
+    api_token: Annotated[str, Header(alias="x-auth-token")] = "",
+):
+    if request.method not in UNSAFE_METHODS:
+        return
     if api_token not in API_TOKENS:
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
+            status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid API token",
         )
