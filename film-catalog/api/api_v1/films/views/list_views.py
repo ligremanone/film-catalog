@@ -3,6 +3,7 @@ from api.api_v1.films.crud import storage
 from api.api_v1.films.dependencies import (
     save_storage_data,
     check_api_token_for_unsafe_methods,
+    user_basic_auth_required_for_unsafe_methods,
 )
 from schemas.film import Film, FilmCreate, FilmRead
 
@@ -11,7 +12,8 @@ router = APIRouter(
     tags=["films"],
     dependencies=[
         Depends(save_storage_data),
-        Depends(check_api_token_for_unsafe_methods),
+        # Depends(check_api_token_for_unsafe_methods),
+        Depends(user_basic_auth_required_for_unsafe_methods),
     ],
     responses={
         status.HTTP_401_UNAUTHORIZED: {

@@ -14,3 +14,7 @@ API_TOKENS: frozenset[str] = frozenset(
         "XJMZDLlO5b0lVbsvlgV3BX8U6Zc",
     }
 )
+USER_DB: dict[str, str] = {
+    "rust": "password",
+    "am": "qwerty",
+}
