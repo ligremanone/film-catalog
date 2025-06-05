@@ -57,6 +57,16 @@ def save_storage_data(
     background_tasks.add_task(storage.save_data)
 
 
+def validate_api_token(
+    api_token: HTTPAuthorizationCredentials,
+):
+    if api_token.credentials not in API_TOKENS:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid API token",
+        )
+
+
 def check_api_token_for_unsafe_methods(
     request: Request,
     api_token: Annotated[
@@ -71,11 +81,23 @@ def check_api_token_for_unsafe_methods(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="API token required",
         )
-    if api_token.credentials not in API_TOKENS:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid API token",
-        )
+    validate_api_token(api_token)
+
+
+def validate_basic_auth(
+    credentials: HTTPBasicCredentials | None,
+):
+    if (
+        credentials
+        and credentials.username in USER_DB
+        and credentials.password == USER_DB[credentials.username]
+    ):
+        return
+    raise HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Invalid username or password",
+        headers={"WWW-Authenticate": "Basic"},
+    )
 
 
 def user_basic_auth_required_for_unsafe_methods(
@@ -87,14 +109,26 @@ def user_basic_auth_required_for_unsafe_methods(
     log.info("User credentials %s", credentials)
     if request.method not in UNSAFE_METHODS:
         return
-    if (
-        credentials
-        and credentials.username in USER_DB
-        and credentials.password == USER_DB[credentials.username]
-    ):
-        return
+    validate_basic_auth(credentials)
+
+
+def api_token_or_user_basic_auth_required_for_unsafe_methods(
+    request: Request,
+    api_token: Annotated[
+        HTTPAuthorizationCredentials | None,
+        Depends(static_api_token),
+    ] = None,
+    credentials: Annotated[
+        HTTPBasicCredentials | None, Depends(user_basic_auth)
+    ] = None,
+):
+    if request.method not in UNSAFE_METHODS:
+        return None
+    if credentials:
+        return validate_basic_auth(credentials)
+    if api_token:
+        return validate_api_token(api_token)
     raise HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="User credentials required. Invalid username or password",
-        headers={"WWW-Authenticate": "Basic"},
+        detail="API token or user credentials required",
     )
