@@ -14,10 +14,15 @@ API_TOKENS: frozenset[str] = frozenset(
         "XJMZDLlO5b0lVbsvlgV3BX8U6Zc",
     }
 )
+
 USER_DB: dict[str, str] = {
     "rust": "password",
     "am": "qwerty",
 }
+
 REDIS_HOST: str = "localhost"
 REDIS_PORT: int = 6379
 REDIS_DB: int = 0
+
+REDIS_DB_TOKENS = 1
+REDIS_DB_SET_NAME = "tokens"

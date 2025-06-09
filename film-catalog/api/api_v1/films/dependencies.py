@@ -10,7 +10,8 @@ from fastapi.security import (
     HTTPBasicCredentials,
 )
 from api.api_v1.films.crud import storage
-from core.config import API_TOKENS, USER_DB
+from api.api_v1.films.redis import redis_tokens
+from core.config import API_TOKENS, USER_DB, REDIS_DB_SET_NAME
 from schemas.film import Film
 
 log = logging.getLogger(__name__)
@@ -60,11 +61,12 @@ def save_storage_data(
 def validate_api_token(
     api_token: HTTPAuthorizationCredentials,
 ):
-    if api_token.credentials not in API_TOKENS:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid API token",
-        )
+    if redis_tokens.sismember(REDIS_DB_SET_NAME, api_token.credentials):
+        return
+    raise HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Invalid API token",
+    )
 
 
 def check_api_token_for_unsafe_methods(
