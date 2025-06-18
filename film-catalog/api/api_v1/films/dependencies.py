@@ -9,9 +9,9 @@ from fastapi.security import (
     HTTPBasic,
     HTTPBasicCredentials,
 )
+
 from api.api_v1.films.crud import storage
-from api.api_v1.films.redis import redis_tokens
-from core.config import API_TOKENS, USER_DB, REDIS_DB_SET_NAME
+from api.api_v1.auth.services import redis_tokens, redis_users
 from schemas.film import Film
 
 log = logging.getLogger(__name__)
@@ -89,15 +89,14 @@ def check_api_token_for_unsafe_methods(
 def validate_basic_auth(
     credentials: HTTPBasicCredentials | None,
 ):
-    if (
-        credentials
-        and credentials.username in USER_DB
-        and credentials.password == USER_DB[credentials.username]
+    if credentials and redis_users.validate_user_password(
+        credentials.username,
+        credentials.password,
     ):
         return
     raise HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Invalid username or password",
+        detail="User credentials required. Invalid username or password",
         headers={"WWW-Authenticate": "Basic"},
     )
 
