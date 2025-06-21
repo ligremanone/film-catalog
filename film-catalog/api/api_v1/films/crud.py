@@ -53,8 +53,8 @@ class FilmCatalogStorage(BaseModel):
             return cls.model_validate(data)
 
     def get(self) -> list[Film]:
-        data = redis.hgetall(name=config.REDIS_FILMS_HASH_NAME)
-        return [Film.model_validate_json(value) for value in data.values()]
+        data = redis.hvals(name=config.REDIS_FILMS_HASH_NAME)
+        return [Film.model_validate_json(value) for value in data]
 
     def get_by_slug(self, slug: str) -> Film | None:
         data = redis.hget(name=config.REDIS_FILMS_HASH_NAME, key=slug)
