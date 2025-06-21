@@ -3,7 +3,9 @@ from json import JSONDecodeError
 from pathlib import Path
 import logging
 from pydantic import BaseModel
+from redis import Redis
 
+from core import config
 from core.config import DB_PATH
 from schemas.film import (
     Film,
@@ -13,6 +15,13 @@ from schemas.film import (
 )
 
 log = logging.getLogger(__name__)
+
+redis = Redis(
+    host=config.REDIS_HOST,
+    port=config.REDIS_PORT,
+    db=config.REDIS_DB_FILMS,
+    decode_responses=True,
+)
 
 
 class FilmCatalogStorage(BaseModel):
@@ -51,7 +60,11 @@ class FilmCatalogStorage(BaseModel):
 
     def create(self, new_film_in: FilmCreate) -> Film:
         new_film = Film(**new_film_in.model_dump(), rating=0)
-        self.slug_to_film[new_film.slug] = new_film
+        redis.hset(
+            name=config.REDIS_FILMS_HASH_NAME,
+            key=new_film.slug,
+            value=new_film.model_dump_json(),
+        )
         log.info(
             "Film %r created",
             new_film.name,
