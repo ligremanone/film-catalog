@@ -1,5 +1,5 @@
 from fastapi import APIRouter, status, Depends, HTTPException
-from api.api_v1.films.crud import storage
+from api.api_v1.films.crud import storage, FilmAlreadyExistsError
 from api.api_v1.films.dependencies import (
     api_token_or_user_basic_auth_required_for_unsafe_methods,
 )
@@ -22,16 +22,6 @@ router = APIRouter(
                 },
             },
         },
-        status.HTTP_409_CONFLICT: {
-            "description": "Film already exists",
-            "content": {
-                "application/json": {
-                    "example": {
-                        "detail": "Film already exists",
-                    },
-                },
-            },
-        },
     },
 )
 
@@ -48,13 +38,26 @@ async def get_all_films():
     "/",
     response_model=Film,
     status_code=status.HTTP_201_CREATED,
+    responses={
+        status.HTTP_409_CONFLICT: {
+            "description": "Film with this slug already exists",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "detail": "Film with slug='slug' already exists",
+                    },
+                },
+            },
+        },
+    },
 )
 async def create_film(
     new_film: FilmCreate,
 ):
-    if not storage.get_by_slug(new_film.slug):
-        return storage.create(new_film)
-    raise HTTPException(
-        status_code=status.HTTP_409_CONFLICT,
-        detail=f"Film with slug={new_film.slug!r} already exists",
-    )
+    try:
+        return storage.create_or_raise_if_exists(new_film)
+    except FilmAlreadyExistsError:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=f"Film with slug={new_film.slug!r} already exists",
+        )

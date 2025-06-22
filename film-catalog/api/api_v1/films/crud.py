@@ -1,12 +1,8 @@
-import json
-from json import JSONDecodeError
-from pathlib import Path
 import logging
 from pydantic import BaseModel
 from redis import Redis
 
 from core import config
-from core.config import DB_PATH
 from schemas.film import (
     Film,
     FilmCreate,
@@ -24,6 +20,18 @@ redis = Redis(
 )
 
 
+class FilmError(Exception):
+    """
+    Base exception class for film related errors
+    """
+
+
+class FilmAlreadyExistsError(FilmError):
+    """
+    Raised when a film with the same slug already exists
+    """
+
+
 class FilmCatalogStorage(BaseModel):
     def get(self) -> list[Film]:
         data = redis.hvals(name=config.REDIS_FILMS_HASH_NAME)
@@ -34,6 +42,9 @@ class FilmCatalogStorage(BaseModel):
         if data:
             return Film.model_validate_json(data)
         return None
+
+    def exists(self, slug: str) -> bool:
+        return redis.hexists(name=config.REDIS_FILMS_HASH_NAME, key=slug)
 
     @staticmethod
     def save_film(new_film: Film):
@@ -51,6 +62,11 @@ class FilmCatalogStorage(BaseModel):
             new_film.name,
         )
         return new_film
+
+    def create_or_raise_if_exists(self, new_film_in: FilmCreate) -> Film:
+        if not self.exists(new_film_in.slug):
+            return self.create(new_film_in)
+        raise FilmAlreadyExistsError(new_film_in.slug)
 
     def delete_by_slug(self, slug: str) -> None:
         redis.hdel(
