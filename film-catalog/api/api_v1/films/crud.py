@@ -25,33 +25,6 @@ redis = Redis(
 
 
 class FilmCatalogStorage(BaseModel):
-    slug_to_film: dict[str, Film] = {}
-
-    def save_data(self):
-        with open(
-            DB_PATH,
-            "w+",
-            encoding="utf-8",
-        ) as file:
-            json.dump(
-                self.model_dump(),
-                file,
-                indent=4,
-                ensure_ascii=False,
-            )
-        log.info(
-            "Saved films to storage file",
-        )
-
-    @classmethod
-    def from_data(cls) -> "FilmCatalogStorage":
-        if not Path(DB_PATH).exists():
-            log.info("Data not found")
-            return FilmCatalogStorage()
-        with open(DB_PATH, "r", encoding="utf-8") as file:
-            data = json.load(file)
-            return cls.model_validate(data)
-
     def get(self) -> list[Film]:
         data = redis.hvals(name=config.REDIS_FILMS_HASH_NAME)
         return [Film.model_validate_json(value) for value in data]
@@ -103,16 +76,6 @@ class FilmCatalogStorage(BaseModel):
             setattr(film, field_name, value)
         self.save_film(film)
         return film
-
-    def init_storage_from_data(self):
-        try:
-            data = FilmCatalogStorage().from_data()
-        except JSONDecodeError:
-            self.save_data()
-            log.warning("Rewritten films storage file due to JSONDecodeError")
-            return
-        self.slug_to_film.update(data.slug_to_film)
-        log.warning("Loaded films from storage file")
 
 
 storage = FilmCatalogStorage()

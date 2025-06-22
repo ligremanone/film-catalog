@@ -47,17 +47,6 @@ async def prefetch_film(slug: str) -> Film:
     )
 
 
-def save_storage_data(
-    background_tasks: BackgroundTasks,
-    request: Request,
-):
-    yield
-    if request.method not in UNSAFE_METHODS:
-        return
-    log.info("Add background task to save data")
-    background_tasks.add_task(storage.save_data)
-
-
 def validate_api_token(
     api_token: HTTPAuthorizationCredentials,
 ):
