@@ -62,13 +62,17 @@ class FilmCatalogStorage(BaseModel):
             return Film.model_validate_json(data)
         return None
 
-    def create(self, new_film_in: FilmCreate) -> Film:
-        new_film = Film(**new_film_in.model_dump(), rating=0)
-        redis.hset(
+    @staticmethod
+    def save_film(new_film: Film):
+        return redis.hset(
             name=config.REDIS_FILMS_HASH_NAME,
             key=new_film.slug,
             value=new_film.model_dump_json(),
         )
+
+    def create(self, new_film_in: FilmCreate) -> Film:
+        new_film = Film(**new_film_in.model_dump(), rating=0)
+        self.save_film(new_film)
         log.info(
             "Film %r created",
             new_film.name,
@@ -84,6 +88,7 @@ class FilmCatalogStorage(BaseModel):
     def update(self, film: Film, film_update: FilmUpdate) -> Film:
         for field_name, value in film_update:
             setattr(film, field_name, value)
+        self.save_film(film)
         return film
 
     def update_partial(
@@ -93,6 +98,7 @@ class FilmCatalogStorage(BaseModel):
             exclude_unset=True
         ).items():
             setattr(film, field_name, value)
+        self.save_film(film)
         return film
 
     def init_storage_from_data(self):
