@@ -1,4 +1,4 @@
-from fastapi import APIRouter, status, Depends
+from fastapi import APIRouter, status, Depends, HTTPException
 from api.api_v1.films.crud import storage
 from api.api_v1.films.dependencies import (
     api_token_or_user_basic_auth_required_for_unsafe_methods,
@@ -18,6 +18,16 @@ router = APIRouter(
                 "application/json": {
                     "example": {
                         "detail": "Invalid API token",
+                    },
+                },
+            },
+        },
+        status.HTTP_409_CONFLICT: {
+            "description": "Film already exists",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "detail": "Film already exists",
                     },
                 },
             },
@@ -42,4 +52,9 @@ async def get_all_films():
 async def create_film(
     new_film: FilmCreate,
 ):
-    return storage.create(new_film)
+    if not storage.get_by_slug(new_film.slug):
+        return storage.create(new_film)
+    raise HTTPException(
+        status_code=status.HTTP_409_CONFLICT,
+        detail=f"Film with slug={new_film.slug!r} already exists",
+    )
