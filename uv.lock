@@ -25,6 +25,15 @@ wheels = [
 ]
 
 [[package]]
+name = "art"
+version = "6.5"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/d4/7d/7d80509bbd19fb747edef94ba487dbadd2747944774ccc0528ad0d005a36/art-6.5.tar.gz", hash = "sha256:a98d77b42c278697ec6cf4b5bdcdfd997f6b2425332da078d4e31e31377d1844", size = 672902, upload-time = "2025-04-12T17:02:20.279Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/67/29/57b06fdb3abdf52c621d3ca3caea735e2db4c8d48288ebd26af448e8e247/art-6.5-py3-none-any.whl", hash = "sha256:70706408144c45c666caab690627d5c74aea7b6c7ce8cc968408ddeef8d84afd", size = 610382, upload-time = "2025-04-12T17:02:21.97Z" },
+]
+
+[[package]]
 name = "certifi"
 version = "2025.4.26"
 source = { registry = "https://pypi.org/simple" }
@@ -124,15 +133,19 @@ name = "fastapiproject-film-catalog"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
+    { name = "art" },
     { name = "fastapi", extra = ["standard"] },
     { name = "redis", extra = ["hiredis"] },
+    { name = "typer" },
     { name = "uvicorn" },
 ]
 
 [package.metadata]
 requires-dist = [
+    { name = "art", specifier = ">=6.5" },
     { name = "fastapi", extras = ["standard"], specifier = ">=0.115.12" },
     { name = "redis", extras = ["hiredis"], specifier = ">=6.2.0" },
+    { name = "typer", specifier = ">=0.15.3" },
     { name = "uvicorn", specifier = ">=0.34.2" },
 ]
 

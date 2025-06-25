@@ -4,7 +4,9 @@ version = "0.1.0"
 description = "Add your description here"
 requires-python = ">=3.13"
 dependencies = [
+    "art>=6.5",
     "fastapi[standard]>=0.115.12",
     "redis[hiredis]>=6.2.0",
+    "typer>=0.15.3",
     "uvicorn>=0.34.2",
 ]
