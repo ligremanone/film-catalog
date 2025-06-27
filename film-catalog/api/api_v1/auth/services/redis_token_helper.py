@@ -5,6 +5,7 @@ from core import config
 
 
 class RedisTokenHelper(AbstractTokenHelper):
+
     def __init__(self, host: str, port: int, db: int, tokens_set_name: str) -> None:
         self.redis = Redis(
             host=host,
@@ -27,6 +28,9 @@ class RedisTokenHelper(AbstractTokenHelper):
             self.tokens_set,
             token,
         )
+
+    def get_tokens(self):
+        return self.redis.smembers(self.tokens_set)
 
 
 redis_tokens = RedisTokenHelper(
