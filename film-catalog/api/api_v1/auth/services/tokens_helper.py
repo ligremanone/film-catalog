@@ -18,9 +18,18 @@ class AbstractTokenHelper(ABC):
         pass
 
     @abstractmethod
-    def get_tokens(self):
+    def get_tokens(self) -> list[str]:
         """
         Get all tokens
+        """
+
+    @abstractmethod
+    def delete_token(
+        self,
+        token: str,
+    ) -> None:
+        """
+        Delete token
         """
 
     @staticmethod
@@ -29,7 +38,6 @@ class AbstractTokenHelper(ABC):
 
     def generate_and_save_token(
         self,
-        token: str,
     ) -> str:
         token = self.generate_token()
         self.add_token(token)

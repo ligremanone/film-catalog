@@ -3,7 +3,6 @@ from random import choice
 import typer
 from rich import print
 from api.api_v1.auth.services import redis_tokens
-from rich.console import Console
 from rich.markdown import Markdown
 
 app = typer.Typer(
@@ -12,7 +11,6 @@ app = typer.Typer(
     rich_markup_mode="rich",
     help="Tokens management",
 )
-console = Console()
 RANDOM_EMOJI = [
     ":smiley:",
     ":vampire:",
@@ -36,8 +34,39 @@ def check(token: Annotated[str, typer.Argument(help="Token to check")]):
     )
 
 
-@app.command(help="Get all tokens")
-def list():
-    console.print(Markdown("""# This is all valid tokens:"""))
+@app.command(
+    help="List all tokens",
+    name="list",
+)
+def list_tokens():
+    print(Markdown("""# This is all valid tokens:"""))
     for token in redis_tokens.get_tokens():
         print(f"{choice(RANDOM_EMOJI)} [green bold]{token}")
+
+
+@app.command(
+    help="Delete token",
+    name="rm",
+)
+def delete_token(
+    token: Annotated[str, typer.Argument(help="Token to delete")],
+):
+    redis_tokens.delete_token(token)
+
+
+@app.command(
+    help="Generate and save token",
+    name="create",
+)
+def create_and_save_token():
+    redis_tokens.generate_and_save_token()
+
+
+@app.command(
+    help="Add token",
+    name="add",
+)
+def add_token(
+    token: Annotated[str, typer.Argument(help="New token")],
+):
+    redis_tokens.add_token(token)
