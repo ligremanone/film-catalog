@@ -49,7 +49,7 @@ async def prefetch_film(slug: str) -> Film:
 
 def validate_api_token(
     api_token: HTTPAuthorizationCredentials,
-):
+) -> None:
     if redis_tokens.token_exists(api_token.credentials):
         return
     raise HTTPException(
@@ -64,7 +64,7 @@ def check_api_token_for_unsafe_methods(
         HTTPAuthorizationCredentials | None,
         Depends(static_api_token),
     ] = None,
-):
+) -> None:
     if request.method not in UNSAFE_METHODS:
         return
     if not api_token:
@@ -77,7 +77,7 @@ def check_api_token_for_unsafe_methods(
 
 def validate_basic_auth(
     credentials: HTTPBasicCredentials | None,
-):
+) -> None:
     if credentials and redis_users.validate_user_password(
         credentials.username,
         credentials.password,
@@ -95,7 +95,7 @@ def user_basic_auth_required_for_unsafe_methods(
     credentials: Annotated[
         HTTPBasicCredentials | None, Depends(user_basic_auth)
     ] = None,
-):
+) -> None:
     log.info("User credentials %s", credentials)
     if request.method not in UNSAFE_METHODS:
         return
@@ -111,7 +111,7 @@ def api_token_or_user_basic_auth_required_for_unsafe_methods(
     credentials: Annotated[
         HTTPBasicCredentials | None, Depends(user_basic_auth)
     ] = None,
-):
+) -> None:
     if request.method not in UNSAFE_METHODS:
         return None
     if credentials:

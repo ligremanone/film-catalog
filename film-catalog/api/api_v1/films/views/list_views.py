@@ -30,7 +30,7 @@ router = APIRouter(
     "/",
     response_model=list[FilmRead],
 )
-async def get_all_films():
+async def get_all_films() -> list[Film]:
     return storage.get()
 
 
@@ -53,7 +53,7 @@ async def get_all_films():
 )
 async def create_film(
     new_film: FilmCreate,
-):
+) -> Film | None:
     try:
         return storage.create_or_raise_if_exists(new_film)
     except FilmAlreadyExistsError:

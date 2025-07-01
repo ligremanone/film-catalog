@@ -9,7 +9,7 @@ app = typer.Typer(
 
 
 @app.command(help="Just a [bold red]simple[/] program")
-def simple_program():
+def simple_program() -> None:
     print(
         art.text2art(
             "Hello World!",

@@ -33,7 +33,7 @@ class AbstractTokenHelper(ABC):
         """
 
     @staticmethod
-    def generate_token():
+    def generate_token() -> str:
         return secrets.token_urlsafe(16)
 
     def generate_and_save_token(

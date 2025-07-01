@@ -31,7 +31,7 @@ FilmBySlug = Annotated[Film, Depends(prefetch_film)]
 )
 async def get_film_by_slug(
     film: FilmBySlug,
-):
+) -> Film:
     return film
 
 
@@ -41,7 +41,7 @@ async def get_film_by_slug(
 )
 async def delete_film(
     film: FilmBySlug,
-):
+) -> None:
     storage.delete(film)
 
 

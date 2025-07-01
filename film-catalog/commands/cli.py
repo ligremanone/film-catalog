@@ -12,7 +12,7 @@ app.add_typer(tokens_app)
 
 
 @app.callback()
-def callback():
+def callback() -> None:
     """
     Some CLI management commands
     """

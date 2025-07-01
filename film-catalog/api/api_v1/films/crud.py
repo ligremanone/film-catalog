@@ -44,11 +44,11 @@ class FilmCatalogStorage(BaseModel):
         return None
 
     def exists(self, slug: str) -> bool:
-        return redis.hexists(name=config.REDIS_FILMS_HASH_NAME, key=slug)
+        return bool(redis.hexists(name=config.REDIS_FILMS_HASH_NAME, key=slug))
 
     @staticmethod
-    def save_film(new_film: Film):
-        return redis.hset(
+    def save_film(new_film: Film) -> None:
+        redis.hset(
             name=config.REDIS_FILMS_HASH_NAME,
             key=new_film.slug,
             value=new_film.model_dump_json(),

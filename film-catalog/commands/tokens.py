@@ -23,7 +23,7 @@ RANDOM_EMOJI = [
 
 
 @app.command(help="Check if the passed token is valid - exists or not")
-def check(token: Annotated[str, typer.Argument(help="Token to check")]):
+def check(token: Annotated[str, typer.Argument(help="Token to check")]) -> None:
     print(
         f"Token [yellow bold]{token}",
         (
@@ -38,7 +38,7 @@ def check(token: Annotated[str, typer.Argument(help="Token to check")]):
     help="List all tokens",
     name="list",
 )
-def list_tokens():
+def list_tokens() -> None:
     print(Markdown("""# This is all valid tokens:"""))
     for token in redis_tokens.get_tokens():
         print(f"{choice(RANDOM_EMOJI)} [green bold]{token}")
@@ -50,16 +50,23 @@ def list_tokens():
 )
 def delete_token(
     token: Annotated[str, typer.Argument(help="Token to delete")],
-):
+) -> None:
+    if not redis_tokens.token_exists(token):
+        print(f"Token [yellow]{token}[/] [red]does not exist :hankey:")
+        return
     redis_tokens.delete_token(token)
+    print(f"Token [bold green]{token}[/] [red]deleted[/] from db")
 
 
 @app.command(
     help="Generate and save token",
     name="create",
 )
-def create_and_save_token():
-    redis_tokens.generate_and_save_token()
+def create_and_save_token() -> None:
+    new_token = redis_tokens.generate_and_save_token()
+    print(
+        f"Token [bold medium_purple1]{new_token}[/] generated and saved to db :smiley:"
+    )
 
 
 @app.command(
@@ -68,5 +75,6 @@ def create_and_save_token():
 )
 def add_token(
     token: Annotated[str, typer.Argument(help="New token")],
-):
+) -> None:
     redis_tokens.add_token(token)
+    print(f"Token [bold medium_purple1]{token}[/] added to db")

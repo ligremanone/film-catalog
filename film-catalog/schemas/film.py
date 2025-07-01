@@ -50,7 +50,7 @@ class FilmUpdate(FilmBase):
     description: DescriptionString
 
 
-class FilmUpdatePartial(FilmBase):
+class FilmUpdatePartial(BaseModel):
     name: NameString | None = None
     year: YearNumber | None = None
     description: DescriptionString | None = None

@@ -1,5 +1,5 @@
 from redis import Redis
-
+from typing import cast
 from api.api_v1.auth.services.users_helper import AbstractUsersHelper
 from core import config
 
@@ -19,7 +19,7 @@ class RedisUsersHelper(AbstractUsersHelper):
         )
 
     def get_user_password(self, username: str) -> str | None:
-        return self.redis.get(name=username)
+        return cast(str | None, self.redis.get(name=username))
 
 
 redis_users = RedisUsersHelper(
