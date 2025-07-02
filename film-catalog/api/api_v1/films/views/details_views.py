@@ -47,7 +47,6 @@ async def delete_film(
 
 @router.put(
     "/",
-    response_model=Film,
 )
 async def update_film_detail(
     film: FilmBySlug,
@@ -58,7 +57,6 @@ async def update_film_detail(
 
 @router.patch(
     "/",
-    response_model=Film,
 )
 async def update_film_partial(
     film: FilmBySlug,
