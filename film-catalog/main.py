@@ -1,9 +1,10 @@
-from fastapi import FastAPI, Request
-from api import router as api_router
 import logging
 
+from fastapi import FastAPI, Request
+
+from api import router as api_router
 from app_lifespan import lifespan
-from core.config import LOG_LEVEL, LOG_FORMAT
+from core.config import LOG_FORMAT, LOG_LEVEL
 
 logging.basicConfig(
     level=LOG_LEVEL,
@@ -26,6 +27,6 @@ async def read_root(
         query="",
     )
     return {
-        "message": f"Welcome to film catalog",
+        "message": "Welcome to film catalog",
         "docs": str(docs_url),
     }

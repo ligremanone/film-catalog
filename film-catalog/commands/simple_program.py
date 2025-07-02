@@ -1,6 +1,6 @@
+import art
 import typer
 from rich import print
-import art
 
 app = typer.Typer(
     no_args_is_help=True,

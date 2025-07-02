@@ -1,17 +1,17 @@
 import logging
 from typing import Annotated
 
-from fastapi import HTTPException, status, BackgroundTasks, Request, Query, Header
+from fastapi import HTTPException, Request, status
 from fastapi.params import Depends
 from fastapi.security import (
-    HTTPBearer,
     HTTPAuthorizationCredentials,
     HTTPBasic,
     HTTPBasicCredentials,
+    HTTPBearer,
 )
 
-from api.api_v1.films.crud import storage
 from api.api_v1.auth.services import redis_tokens, redis_users
+from api.api_v1.films.crud import storage
 from schemas.film import Film
 
 log = logging.getLogger(__name__)

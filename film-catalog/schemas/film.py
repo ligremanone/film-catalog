@@ -1,6 +1,7 @@
-from typing import Annotated
 from datetime import datetime
-from annotated_types import Len, Interval, MaxLen
+from typing import Annotated
+
+from annotated_types import Interval, Len, MaxLen
 from pydantic import BaseModel
 
 NameString = Annotated[

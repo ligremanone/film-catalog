@@ -1,9 +1,11 @@
-from typing import Annotated
 from random import choice
+from typing import Annotated
+
 import typer
 from rich import print
-from api.api_v1.auth.services import redis_tokens
 from rich.markdown import Markdown
+
+from api.api_v1.auth.services import redis_tokens
 
 app = typer.Typer(
     name="tokens",
