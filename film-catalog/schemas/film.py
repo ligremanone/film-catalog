@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import UTC, datetime
 from typing import Annotated
 
 from annotated_types import Interval, Len, MaxLen
@@ -10,7 +10,7 @@ NameString = Annotated[
 ]
 YearNumber = Annotated[
     int,
-    Interval(ge=1895, le=datetime.now().year + 5),
+    Interval(ge=1895, le=datetime.now(tz=UTC).year + 5),
 ]
 DescriptionString = Annotated[
     str,

@@ -67,7 +67,7 @@ def delete_token(
 def create_and_save_token() -> None:
     new_token = redis_tokens.generate_and_save_token()
     print(
-        f"Token [bold medium_purple1]{new_token}[/] generated and saved to db :smiley:"
+        f"Token [bold medium_purple1]{new_token}[/] generated and saved to db :smiley:",
     )
 
 

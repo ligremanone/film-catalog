@@ -61,4 +61,4 @@ async def create_film(
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail=f"Film with slug={new_film.slug!r} already exists",
-        )
+        ) from None

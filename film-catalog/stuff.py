@@ -20,7 +20,7 @@ def main() -> None:
         [
             redis.get("number"),
             redis.get("cat_name"),
-        ]
+        ],
     )
 
 

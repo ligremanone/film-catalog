@@ -14,6 +14,6 @@ def simple_program() -> None:
         art.text2art(
             "Hello World!",
             "rand",
-        )
+        ),
     )
     print(f'[green]{art.art("coffee")}')
