@@ -20,6 +20,44 @@ class FilmCreateTestCase(TestCase):
         self.assertEqual(film_in.year, film.year)
         self.assertEqual(film_in.description, film.description)
 
+    def test_film_create_accepts_different_name(self) -> None:
+        names = [
+            "Some Film",
+            "AB" * 50,
+            "New Film",
+        ]
+        for name in names:
+            with self.subTest(name=name, msg=f"test-name-{name}"):
+                film_create = FilmCreate(
+                    slug="some-slug",
+                    name=name,
+                    year=2022,
+                    description="Some description",
+                )
+                self.assertEqual(
+                    name,
+                    film_create.name,
+                )
+
+    def test_film_create_accepts_different_year(self) -> None:
+        years = [
+            2022,
+            2023,
+            2024,
+        ]
+        for year in years:
+            with self.subTest(year=year, msg=f"test-year-{year}"):
+                film_create = FilmCreate(
+                    slug="some-slug",
+                    name="Some Film",
+                    year=year,
+                    description="Some description",
+                )
+                self.assertEqual(
+                    year,
+                    film_create.year,
+                )
+
 
 class FilmUpdateTestCase(TestCase):
     def test_film_can_be_updated_from_update_schema(self) -> None:
