@@ -1,5 +1,7 @@
 from unittest import TestCase
 
+from pydantic import ValidationError
+
 from schemas.film import Film, FilmCreate, FilmUpdate, FilmUpdatePartial
 
 
@@ -57,6 +59,33 @@ class FilmCreateTestCase(TestCase):
                     year,
                     film_create.year,
                 )
+
+    def test_film_slug_too_short(self) -> None:
+        with self.assertRaises(ValidationError) as exc_info:
+            FilmCreate(
+                slug="so",
+                name="Some Film",
+                year=2025,
+                description="Some description",
+            )
+        error_detail = exc_info.exception.errors()[0]
+        expected_type = "string_too_short"
+        self.assertEqual(
+            expected_type,
+            error_detail["type"],
+        )
+
+    def test_film_slug_too_short_with_regex(self) -> None:
+        with self.assertRaisesRegex(
+            ValidationError,
+            expected_regex="String should have at least 3 characters",
+        ):
+            FilmCreate(
+                slug="so",
+                name="Some Film",
+                year=2025,
+                description="Some description",
+            )
 
 
 class FilmUpdateTestCase(TestCase):

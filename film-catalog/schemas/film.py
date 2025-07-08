@@ -39,7 +39,10 @@ class FilmRead(FilmBase):
 
 
 class FilmCreate(FilmBase):
-    slug: str
+    slug: Annotated[
+        str,
+        Len(min_length=3, max_length=100),
+    ]
     name: NameString
     year: YearNumber
     description: DescriptionString
