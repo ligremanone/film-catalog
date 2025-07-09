@@ -1,4 +1,5 @@
 import logging
+from os import getenv
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -9,7 +10,7 @@ LOG_FORMAT: str = (
 LOG_LEVEL: int = logging.INFO
 
 REDIS_HOST: str = "localhost"
-REDIS_PORT: int = 6379
+REDIS_PORT: int = int(getenv("REDIS_PORT", "0")) or 6379
 REDIS_DB: int = 0
 
 REDIS_DB_TOKENS = 1
