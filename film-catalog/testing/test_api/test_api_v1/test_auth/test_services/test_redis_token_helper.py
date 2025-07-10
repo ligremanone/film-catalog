@@ -20,9 +20,7 @@ class RedisTokensHelperTestCase(TestCase):
     def test_add_token(self) -> None:
         new_token = redis_tokens.generate_token()
         redis_tokens.add_token(new_token)
-        expected_exists = True
-        self.assertEqual(
-            expected_exists,
+        self.assertTrue(
             redis_tokens.token_exists(new_token),
         )
 
@@ -35,14 +33,10 @@ class RedisTokensHelperTestCase(TestCase):
     def test_delete_token(self) -> None:
         token = redis_tokens.generate_token()
         redis_tokens.add_token(token)
-        expected_exists = True
-        self.assertEqual(
-            expected_exists,
+        self.assertTrue(
             redis_tokens.token_exists(token),
         )
         redis_tokens.delete_token(token)
-        expected_exists = False
-        self.assertEqual(
-            expected_exists,
+        self.assertFalse(
             redis_tokens.token_exists(token),
         )
