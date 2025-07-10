@@ -1,6 +1,7 @@
 import random
 import string
 from os import getenv
+from typing import ClassVar
 from unittest import TestCase
 
 from api.api_v1.films.crud import storage
@@ -11,26 +12,27 @@ if getenv("TESTING") != "1":
     raise OSError(msg)
 
 
+def create_film() -> Film:
+    new_film_in = FilmCreate(
+        slug="".join(
+            random.choices(
+                string.ascii_letters,
+                k=8,
+            ),
+        ),
+        name="Some Film",
+        description="Some description",
+        year=2025,
+    )
+    return storage.create(new_film_in)
+
+
 class FilmStorageUpdateTestCase(TestCase):
     def setUp(self) -> None:
-        self.film = self.create_film()
+        self.film = create_film()
 
     def tearDown(self) -> None:
         storage.delete(self.film)
-
-    def create_film(self) -> Film:
-        new_film_in = FilmCreate(
-            slug="".join(
-                random.choices(
-                    string.ascii_letters,
-                    k=8,
-                ),
-            ),
-            name="Some Film",
-            description="Some description",
-            year=2025,
-        )
-        return storage.create(new_film_in)
 
     def test_update(self) -> None:
         film_update = FilmUpdate(
@@ -62,3 +64,38 @@ class FilmStorageUpdateTestCase(TestCase):
             film_partial_update.description,
             updated_film.description,
         )
+
+
+class FilmStorageGetTestCase(TestCase):
+    FILMS_COUNT = 5
+    films: ClassVar[list[Film]] = []
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.films = [create_film() for _ in range(cls.FILMS_COUNT)]
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        for film in cls.films:
+            storage.delete(film)
+
+    def test_get_list(self) -> None:
+        films = storage.get()
+        expected_slugs = {su.slug for su in self.films}
+        slugs = {su.slug for su in films}
+        self.assertEqual(
+            expected_slugs,
+            slugs,
+        )
+
+    def test_get_by_slug(self) -> None:
+        for film in self.films:
+            with self.subTest(
+                slug=film.slug,
+                msg=f"Validate can get slug {film.slug!r}",
+            ):
+                db_film = storage.get_by_slug(film.slug)
+                self.assertEqual(
+                    film,
+                    db_film,
+                )
