@@ -1,5 +1,6 @@
 import random
 import string
+from collections.abc import Generator
 from typing import ClassVar
 from unittest import TestCase
 
@@ -22,6 +23,13 @@ def create_film() -> Film:
         year=2025,
     )
     return storage.create(new_film_in)
+
+
+@pytest.fixture()
+def film() -> Generator[Film]:
+    film = create_film()
+    yield film
+    storage.delete(film)
 
 
 class FilmStorageUpdateTestCase(TestCase):
@@ -98,9 +106,8 @@ class FilmStorageGetTestCase(TestCase):
                 )
 
 
-def test_create_or_raise_if_exists() -> None:
-    existing_film = create_film()
-    film_create = FilmCreate(**existing_film.model_dump())
+def test_create_or_raise_if_exists(film: Film) -> None:
+    film_create = FilmCreate(**film.model_dump())
     with pytest.raises(
         FilmAlreadyExistsError,
         match=film_create.slug,
