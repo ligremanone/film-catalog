@@ -24,6 +24,7 @@ dev = [
 [tool.mypy]
 strict = true
 plugins = ['pydantic.mypy']
+ignore_missing_imports = true
 
 [tool.ruff]
 required-version = '>=0.12.1'
