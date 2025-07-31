@@ -4,6 +4,8 @@ from typing import Annotated
 from annotated_types import Interval, Len, MaxLen
 from pydantic import BaseModel
 
+from core.config import DESCRIPTION_MAX_LENGTH
+
 NameString = Annotated[
     str,
     Len(min_length=1, max_length=100),
@@ -14,7 +16,7 @@ YearNumber = Annotated[
 ]
 DescriptionString = Annotated[
     str,
-    MaxLen(256),
+    MaxLen(DESCRIPTION_MAX_LENGTH),
 ]
 
 

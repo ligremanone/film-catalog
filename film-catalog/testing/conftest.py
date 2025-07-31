@@ -13,16 +13,21 @@ if getenv("TESTING") != "1":
     pytest.exit(msg)
 
 
-def build_film_create(slug: str) -> FilmCreate:
+def build_film_create(
+    slug: str,
+    description: str = "Some description",
+) -> FilmCreate:
     return FilmCreate(
         slug=slug,
         name="Some Film",
-        description="Some description",
+        description=description,
         year=2025,
     )
 
 
-def build_film_create_random_slug() -> FilmCreate:
+def build_film_create_random_slug(
+    description: str = "Some description",
+) -> FilmCreate:
     return build_film_create(
         slug="".join(
             random.choices(
@@ -30,16 +35,27 @@ def build_film_create_random_slug() -> FilmCreate:
                 k=8,
             ),
         ),
+        description=description,
     )
 
 
-def create_film(slug: str) -> Film:
-    new_film_in = build_film_create(slug)
+def create_film(
+    slug: str,
+    description: str = "Some description",
+) -> Film:
+    new_film_in = build_film_create(
+        slug,
+        description=description,
+    )
     return storage.create(new_film_in)
 
 
-def create_film_random_slug() -> Film:
-    new_film_in = build_film_create_random_slug()
+def create_film_random_slug(
+    description: str = "Some description",
+) -> Film:
+    new_film_in = build_film_create_random_slug(
+        description=description,
+    )
     return storage.create(new_film_in)
 
 
