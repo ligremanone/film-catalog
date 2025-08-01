@@ -15,8 +15,9 @@ from testing.conftest import create_film_random_slug
 class TestUpdatePartial:
     @pytest.fixture()
     def film(self, request: SubRequest) -> Generator[Film]:
-        description = request.param  # noqa:F841
-        film = create_film_random_slug(request.param)
+        film = create_film_random_slug(
+            description=request.param,
+        )
         yield film
         storage.delete(film)
 
