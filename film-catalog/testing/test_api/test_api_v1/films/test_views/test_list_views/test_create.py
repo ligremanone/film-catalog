@@ -11,6 +11,8 @@ from api.api_v1.films.crud import storage
 from main import app
 from schemas.film import Film, FilmCreate
 
+pytestmark = pytest.mark.apitest
+
 
 def test_create_film(
     auth_client: TestClient,

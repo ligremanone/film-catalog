@@ -11,6 +11,8 @@ from main import app
 from schemas.film import Film
 from testing.conftest import create_film_random_slug
 
+pytestmark = pytest.mark.apitest
+
 
 class TestUpdatePartial:
     @pytest.fixture()

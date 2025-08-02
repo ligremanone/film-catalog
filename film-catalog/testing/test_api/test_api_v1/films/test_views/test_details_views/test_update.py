@@ -10,6 +10,8 @@ from main import app
 from schemas.film import Film, FilmUpdate
 from testing.conftest import create_film_random_slug
 
+pytestmark = pytest.mark.apitest
+
 
 class TestUpdate:
     @pytest.fixture()

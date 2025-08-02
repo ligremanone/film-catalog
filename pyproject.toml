@@ -24,10 +24,11 @@ dev = [
 
 [tool.pytest.ini_options]
 minversion = "6.0"
-addopts = "-ra"
+addopts = "-ra --strict-markers"
 log_cli_level = "INFO"
 log_cli = false
 console_output_style = "count"
+markers = ['apitest',]
 
 [tool.mypy]
 strict = true
