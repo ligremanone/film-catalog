@@ -8,9 +8,15 @@ import pytest
 from api.api_v1.films.crud import storage
 from schemas.film import Film, FilmCreate
 
-if getenv("TESTING") != "1":
-    msg = "Environment not ready for testing"
-    pytest.exit(msg)
+
+@pytest.fixture(
+    scope="session",
+    autouse=True,
+)
+def check_testing_env() -> None:
+    if getenv("TESTING") != "1":
+        msg = "Environment not ready for testing"
+        pytest.exit(msg)
 
 
 def build_film_create(

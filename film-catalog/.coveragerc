@@ -4,7 +4,7 @@ omit =
     # omit stuff.py
     stuff.py
 
-command_line = -m unittest
+command_line = -m pytest
 
 [report]
 skip_empty = True
