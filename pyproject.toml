@@ -22,6 +22,13 @@ dev = [
     "ruff>=0.12.1",
 ]
 
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra"
+log_cli_level = "INFO"
+log_cli = false
+console_output_style = "count"
+
 [tool.mypy]
 strict = true
 plugins = ['pydantic.mypy']
