@@ -29,6 +29,7 @@ log_cli_level = "INFO"
 log_cli = false
 console_output_style = "count"
 markers = ['apitest',]
+xfail_strict = true
 
 [tool.mypy]
 strict = true

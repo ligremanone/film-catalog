@@ -1,3 +1,4 @@
+import logging
 import random
 import string
 from typing import Any
@@ -15,8 +16,10 @@ pytestmark = pytest.mark.apitest
 
 
 def test_create_film(
+    caplog: pytest.LogCaptureFixture,
     auth_client: TestClient,
 ) -> None:
+    caplog.set_level(logging.INFO)
     url = app.url_path_for("create_film")
     film_create = FilmCreate(
         slug="".join(
@@ -38,6 +41,8 @@ def test_create_film(
     response_data = response.json()
     received_data = FilmCreate(**response_data)
     assert received_data == film_create, response_data
+    assert f"Film {film_create.name!r} created" in caplog.text
+    assert film_create.name in caplog.text
     storage.delete_by_slug(film_create.slug)
 
 

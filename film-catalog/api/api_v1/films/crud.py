@@ -85,7 +85,9 @@ class FilmCatalogStorage(BaseModel):
         return film
 
     def update_partial(
-        self, film: Film, film_update_partial: FilmUpdatePartial,
+        self,
+        film: Film,
+        film_update_partial: FilmUpdatePartial,
     ) -> Film:
         for field_name, value in film_update_partial.model_dump(
             exclude_unset=True,

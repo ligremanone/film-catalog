@@ -66,3 +66,12 @@ async def update_film_partial(
         film,
         film_update_partial,
     )
+
+
+@router.post(
+    "/transfer/",
+)
+async def transfer_film(
+    # film: FilmBySlug,
+) -> dict[str, str]:
+    return {"message": "work in progress"}
