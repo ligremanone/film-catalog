@@ -8,6 +8,7 @@ on:
       - main
     paths:
       - film-catalog/**
+      - .github/workflows/**
 jobs:
   run-black:
     runs-on: ubuntu-latest
@@ -21,4 +22,18 @@ jobs:
           python -m pip install --upgrade pip
           pip install "black==25.1.0"
       - name: Black check ⚫️
-        run: black ./
+        run: black --check --diff ./
+  list-dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          pyproject-file: 'pyproject.toml'
+          enable-cache: true
+      - name: Install the project
+        run: uv sync --locked --all-extras --dev
+      - name: List dependencies
+        run: uv tree
