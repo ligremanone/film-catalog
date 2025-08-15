@@ -93,7 +93,8 @@ def validate_basic_auth(
 def user_basic_auth_required_for_unsafe_methods(
     request: Request,
     credentials: Annotated[
-        HTTPBasicCredentials | None, Depends(user_basic_auth),
+        HTTPBasicCredentials | None,
+        Depends(user_basic_auth),
     ] = None,
 ) -> None:
     log.info("User credentials %s", credentials)
@@ -109,7 +110,8 @@ def api_token_or_user_basic_auth_required_for_unsafe_methods(
         Depends(static_api_token),
     ] = None,
     credentials: Annotated[
-        HTTPBasicCredentials | None, Depends(user_basic_auth),
+        HTTPBasicCredentials | None,
+        Depends(user_basic_auth),
     ] = None,
 ) -> None:
     if request.method not in UNSAFE_METHODS:
