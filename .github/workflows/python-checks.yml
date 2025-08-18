@@ -10,7 +10,7 @@ on:
       - film-catalog/**
       - .github/workflows/**
 jobs:
-  run-black:
+  run-checks:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -26,13 +26,18 @@ jobs:
       - name: Setup uv
         uses: astral-sh/setup-uv@v6
         with:
-          pyproject-file: 'pyproject.toml'
+          version-file: 'pyproject.toml'
           enable-cache: true
       - name: Install the project
         run: uv sync --locked --all-extras --dev
+      - name: Run ruff --diff
+        uses: astral-sh/ruff-action@v3
+        with:
+          args: 'check --diff'
+          version-file: 'pyproject.toml'
       - name: Run ruff
         uses: astral-sh/ruff-action@v3
         with:
-          pyproject-file: 'pyproject.toml'
+          version-file: 'pyproject.toml'
       - name: Run mypy
         run: uv run mypy film-catalog
