@@ -9,7 +9,7 @@ LOG_FORMAT: str = (
 )
 LOG_LEVEL: int = logging.INFO
 
-REDIS_HOST: str = "localhost"
+REDIS_HOST: str = getenv("REDIS_HOST", "localhost")
 REDIS_PORT: int = int(getenv("REDIS_PORT", "0")) or 6379
 REDIS_DB: int = 0
 
