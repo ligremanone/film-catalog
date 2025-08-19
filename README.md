@@ -1,8 +1,5 @@
 # FastAPI Film Catalog
 
-# Film Catalog
-
-[![CI](https://img.shields.io/github/actions/workflow/status/ligremanone/film-catalog/python-checks.yml?branch=main&label=CI&logo=github&logoColor=white&style=for-the-badge)](https://github.com/ligremanone/film-catalog/actions)
 [![Python](https://img.shields.io/badge/Python-3.13-blue?logo=python&logoColor=white&style=for-the-badge)](https://www.python.org/)
 [![uv](https://img.shields.io/badge/dependencies-uv-8A2BE2?logo=lightning&logoColor=white&style=for-the-badge)](https://github.com/astral-sh/uv)
 [![Black](https://img.shields.io/badge/code%20style-black-000000?logo=python&logoColor=white&style=for-the-badge)](https://github.com/psf/black)
