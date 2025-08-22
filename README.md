@@ -6,6 +6,8 @@
 [![Ruff](https://img.shields.io/badge/linter-ruff-red?logo=ruff&logoColor=white&style=for-the-badge)](https://github.com/astral-sh/ruff)
 [![Mypy](https://img.shields.io/badge/type%20checker-mypy-2E5DFF?logo=python&logoColor=white&style=for-the-badge)](https://github.com/python/mypy)
 
+[![codecov](https://codecov.io/gh/ligremanone/film-catalog/branch/main/graph/badge.svg)](https://codecov.io/gh/ligremanone/film-catalog)
+
 ## Development
 
 ### Setup
