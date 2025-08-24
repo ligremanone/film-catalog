@@ -5,7 +5,7 @@ import pytest
 
 from api.api_v1.films.crud import FilmAlreadyExistsError, storage
 from schemas.film import Film, FilmCreate, FilmUpdate, FilmUpdatePartial
-from testing.conftest import create_film_random_slug
+from testing.conftest import build_film_create_random_slug, create_film_random_slug
 
 
 class FilmStorageUpdateTestCase(TestCase):
@@ -84,6 +84,17 @@ class FilmStorageGetTestCase(TestCase):
 
 def test_create_or_raise_if_exists(film: Film) -> None:
     film_create = FilmCreate(**film.model_dump())
+    with pytest.raises(
+        FilmAlreadyExistsError,
+        match=film_create.slug,
+    ) as exc_info:
+        storage.create_or_raise_if_exists(film_create)
+    assert exc_info.value.args[0] == film_create.slug
+
+
+def test_create_twice() -> None:
+    film_create = build_film_create_random_slug()
+    storage.create_or_raise_if_exists(film_create)
     with pytest.raises(
         FilmAlreadyExistsError,
         match=film_create.slug,
