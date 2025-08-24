@@ -5,10 +5,10 @@
 [![Black](https://img.shields.io/badge/code%20style-black-000000?logo=python&logoColor=white&style=for-the-badge)](https://github.com/psf/black)
 [![Ruff](https://img.shields.io/badge/linter-ruff-red?logo=ruff&logoColor=white&style=for-the-badge)](https://github.com/astral-sh/ruff)
 [![Mypy](https://img.shields.io/badge/type%20checker-mypy-2E5DFF?logo=python&logoColor=white&style=for-the-badge)](https://github.com/python/mypy)
+[![Coverage](https://img.shields.io/endpoint?url=https%3A%2F%2Fgist.githubusercontent.com%2Fligremanone%2F9f6aa88087b42fa47df479815ed30518%2Fraw%2Fcoverage.json&style=for-the-badge)
+](https://github.com/ligremanone/film-catalog)
 
 [![codecov](https://codecov.io/gh/ligremanone/film-catalog/branch/main/graph/badge.svg)](https://codecov.io/gh/ligremanone/film-catalog)
-[![Coverage](https://img.shields.io/endpoint?url=https%3A%2F%2Fgist.githubusercontent.com%2Fligremanone%2F9f6aa88087b42fa47df479815ed30518%2Fraw%2Fcoverage.json)
-](https://codecov.io/gh/ligremanone/film-catalog)
 
 ## Development
 
