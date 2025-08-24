@@ -124,3 +124,4 @@ jobs:
           files: coverage.xml
           dry_run: ${{ env.ACT }}
           fail_ci_if_error: 'true'
+          slug: ligremanone/film-catalog
