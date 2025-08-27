@@ -34,23 +34,24 @@ class FilmAlreadyExistsError(FilmError):
 
 
 class FilmCatalogStorage(BaseModel):
+    films_hash_name: str
+
     def get(self) -> list[Film]:
-        data = redis.hvals(name=settings.redis.names.films_hash_name)
+        data = redis.hvals(name=self.films_hash_name)
         return [Film.model_validate_json(value) for value in data]
 
     def get_by_slug(self, slug: str) -> Film | None:
-        data = redis.hget(name=settings.redis.names.films_hash_name, key=slug)
+        data = redis.hget(name=self.films_hash_name, key=slug)
         if data:
             return Film.model_validate_json(data)
         return None
 
     def exists(self, slug: str) -> bool:
-        return bool(redis.hexists(name=settings.redis.names.films_hash_name, key=slug))
+        return bool(redis.hexists(name=self.films_hash_name, key=slug))
 
-    @staticmethod
-    def save_film(new_film: Film) -> None:
+    def save_film(self, new_film: Film) -> None:
         redis.hset(
-            name=settings.redis.names.films_hash_name,
+            name=self.films_hash_name,
             key=new_film.slug,
             value=new_film.model_dump_json(),
         )
@@ -71,7 +72,7 @@ class FilmCatalogStorage(BaseModel):
 
     def delete_by_slug(self, slug: str) -> None:
         redis.hdel(
-            settings.redis.names.films_hash_name,
+            self.films_hash_name,
             slug,
         )
 
@@ -97,4 +98,4 @@ class FilmCatalogStorage(BaseModel):
         return film
 
 
-storage = FilmCatalogStorage()
+storage = FilmCatalogStorage(films_hash_name=settings.redis.names.films_hash_name)
