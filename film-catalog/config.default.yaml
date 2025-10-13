@@ -1,0 +1,7 @@
+film-catalog:
+  logging:
+    log_level_name: INFO
+  redis:
+    db:
+      default: 1
+      tokens_db: 10

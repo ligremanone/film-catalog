@@ -3,7 +3,12 @@ from pathlib import Path
 from typing import Literal, Self
 
 from pydantic import BaseModel, model_validator
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import (
+    BaseSettings,
+    PydanticBaseSettingsSource,
+    SettingsConfigDict,
+    YamlConfigSettingsSource,
+)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -65,13 +70,44 @@ class RedisConfig(BaseModel):
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         case_sensitive=False,
-        env_file=(
-            BASE_DIR / ".env",
-            BASE_DIR / ".env.template",
-        ),
+        env_file=(BASE_DIR / ".env.template", BASE_DIR / ".env"),
+        yaml_file=(BASE_DIR / "config.default.yaml", BASE_DIR / "config.yaml"),
+        yaml_config_section="film-catalog",
         env_nested_delimiter="__",
         env_prefix="FILM_CATALOG__",
     )
+
+    @classmethod
+    def settings_customise_sources(
+        cls,
+        settings_cls: type[BaseSettings],
+        init_settings: PydanticBaseSettingsSource,
+        env_settings: PydanticBaseSettingsSource,
+        dotenv_settings: PydanticBaseSettingsSource,
+        file_secret_settings: PydanticBaseSettingsSource,
+    ) -> tuple[PydanticBaseSettingsSource, ...]:
+        """
+        Define the sources and their order for loading the settings values.
+
+        Args:
+            settings_cls: The Settings class.
+            init_settings: The `InitSettingsSource` instance.
+            env_settings: The `EnvSettingsSource` instance.
+            dotenv_settings: The `DotEnvSettingsSource` instance.
+            file_secret_settings: The `SecretsSettingsSource` instance.
+
+        Returns:
+            A tuple containing the sources and their order for loading the settings
+            values.
+        """
+        return (
+            init_settings,
+            env_settings,
+            dotenv_settings,
+            file_secret_settings,
+            YamlConfigSettingsSource(settings_cls),
+        )
+
     logging: LoggingConfig = LoggingConfig()
     redis: RedisConfig = RedisConfig()
 

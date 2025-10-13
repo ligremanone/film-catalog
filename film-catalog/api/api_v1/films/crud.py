@@ -56,6 +56,9 @@ class FilmCatalogStorage(BaseModel):
             value=new_film.model_dump_json(),
         )
 
+    def clear(self) -> None:
+        redis.delete(self.films_hash_name)
+
     def create(self, new_film_in: FilmCreate) -> Film:
         new_film = Film(**new_film_in.model_dump(), rating=0)
         self.save_film(new_film)

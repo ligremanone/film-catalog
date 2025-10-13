@@ -53,6 +53,7 @@ class FilmStorageGetTestCase(TestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
+        storage.clear()
         cls.films = [create_film_random_slug() for _ in range(cls.FILMS_COUNT)]
 
     @classmethod
