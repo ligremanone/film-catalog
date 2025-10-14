@@ -5,9 +5,9 @@ from _pytest.fixtures import SubRequest
 from starlette import status
 from starlette.testclient import TestClient
 
-from api.api_v1.films.crud import storage
 from main import app
 from schemas.film import Film, FilmUpdate
+from storage.films.crud import storage
 from testing.conftest import create_film_random_slug
 
 pytestmark = pytest.mark.apitest

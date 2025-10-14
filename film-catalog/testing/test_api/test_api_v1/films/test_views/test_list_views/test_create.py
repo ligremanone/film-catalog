@@ -8,9 +8,9 @@ from _pytest.fixtures import SubRequest
 from fastapi import status
 from starlette.testclient import TestClient
 
-from api.api_v1.films.crud import storage
 from main import app
 from schemas.film import Film, FilmCreate
+from storage.films.crud import storage
 
 pytestmark = pytest.mark.apitest
 

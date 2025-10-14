@@ -2,9 +2,9 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, status
 
-from api.api_v1.films.crud import storage
 from api.api_v1.films.dependencies import prefetch_film
 from schemas.film import Film, FilmRead, FilmUpdate, FilmUpdatePartial
+from storage.films.crud import storage
 
 router = APIRouter(
     prefix="/{slug}",

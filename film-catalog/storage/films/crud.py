@@ -10,6 +10,7 @@ from schemas.film import (
     FilmUpdate,
     FilmUpdatePartial,
 )
+from storage.films.exceptions import FilmAlreadyExistsError
 
 log = logging.getLogger(__name__)
 
@@ -19,18 +20,6 @@ redis = Redis(
     db=settings.redis.db.films_db,
     decode_responses=True,
 )
-
-
-class FilmError(Exception):
-    """
-    Base exception class for film related errors
-    """
-
-
-class FilmAlreadyExistsError(FilmError):
-    """
-    Raised when a film with the same slug already exists
-    """
 
 
 class FilmCatalogStorage(BaseModel):

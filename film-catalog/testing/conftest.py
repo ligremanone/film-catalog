@@ -5,8 +5,8 @@ from os import getenv
 
 import pytest
 
-from api.api_v1.films.crud import storage
 from schemas.film import Film, FilmCreate
+from storage.films.crud import storage
 
 
 @pytest.fixture(

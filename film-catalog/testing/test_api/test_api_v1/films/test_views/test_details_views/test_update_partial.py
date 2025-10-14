@@ -5,10 +5,10 @@ from _pytest.fixtures import SubRequest
 from fastapi import status
 from fastapi.testclient import TestClient
 
-from api.api_v1.films.crud import storage
 from core.config import DESCRIPTION_MAX_LENGTH
 from main import app
 from schemas.film import Film
+from storage.films.crud import storage
 from testing.conftest import create_film_random_slug
 
 pytestmark = pytest.mark.apitest
