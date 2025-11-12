@@ -5,12 +5,11 @@ from fastapi.responses import HTMLResponse
 
 from templating import templates
 
-router = APIRouter()
+router = APIRouter(include_in_schema=False)
 
 
 @router.get(
     "/",
-    include_in_schema=False,
     name="home",
 )
 async def home_page(request: Request) -> HTMLResponse:
@@ -33,7 +32,6 @@ async def home_page(request: Request) -> HTMLResponse:
 
 @router.get(
     "/about/",
-    include_in_schema=False,
     name="about",
 )
 async def about_page(request: Request) -> HTMLResponse:

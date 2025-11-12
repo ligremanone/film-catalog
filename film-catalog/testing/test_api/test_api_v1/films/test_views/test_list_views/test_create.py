@@ -6,6 +6,7 @@ from typing import Any
 import pytest
 from _pytest.fixtures import SubRequest
 from fastapi import status
+from pydantic import AnyHttpUrl
 from starlette.testclient import TestClient
 
 from main import app
@@ -31,6 +32,7 @@ def test_create_film(
         name="Some Film",
         description="Some description",
         year=2025,
+        url=AnyHttpUrl("https://example.com"),
     )
     data: dict[str, str] = film_create.model_dump(mode="json")
     response = auth_client.post(

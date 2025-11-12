@@ -2,6 +2,7 @@ from collections.abc import Generator
 
 import pytest
 from _pytest.fixtures import SubRequest
+from pydantic import AnyHttpUrl
 from starlette import status
 from starlette.testclient import TestClient
 
@@ -25,7 +26,7 @@ class TestUpdate:
         storage.delete(film)
 
     @pytest.mark.parametrize(
-        "film, new_description, new_title",
+        "film, new_description, new_title, new_url",
         [
             pytest.param(
                 (
@@ -34,6 +35,7 @@ class TestUpdate:
                 ),
                 "some description",
                 "new title",
+                AnyHttpUrl("https://example.com"),
                 id="same-title-and-new-title",
             ),
             pytest.param(
@@ -43,6 +45,7 @@ class TestUpdate:
                 ),
                 "new description",
                 "new title",
+                AnyHttpUrl("https://example.com"),
                 id="new-title-and-new-title",
             ),
         ],
@@ -56,6 +59,7 @@ class TestUpdate:
         auth_client: TestClient,
         new_description: str,
         new_title: str,
+        new_url: AnyHttpUrl,
     ) -> None:
         url = app.url_path_for(
             "update_film_detail",
@@ -65,6 +69,7 @@ class TestUpdate:
             description=new_description,
             name=new_title,
             year=film.year,
+            url=new_url,
         )
         response = auth_client.put(
             url,

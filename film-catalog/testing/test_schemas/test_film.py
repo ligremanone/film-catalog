@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from pydantic import ValidationError
+from pydantic import AnyHttpUrl, ValidationError
 
 from schemas.film import Film, FilmCreate, FilmUpdate, FilmUpdatePartial
 
@@ -12,6 +12,7 @@ class FilmCreateTestCase(TestCase):
             name="Some Film",
             year=2022,
             description="Some description",
+            url=AnyHttpUrl("https://example.com"),
         )
         film = Film(
             **film_in.model_dump(),
@@ -35,6 +36,7 @@ class FilmCreateTestCase(TestCase):
                     name=name,
                     year=2022,
                     description="Some description",
+                    url=AnyHttpUrl("https://example.com"),
                 )
                 self.assertEqual(
                     name,
@@ -54,6 +56,7 @@ class FilmCreateTestCase(TestCase):
                     name="Some Film",
                     year=year,
                     description="Some description",
+                    url=AnyHttpUrl("https://example.com"),
                 )
                 self.assertEqual(
                     year,
@@ -67,6 +70,7 @@ class FilmCreateTestCase(TestCase):
                 name="Some Film",
                 year=2025,
                 description="Some description",
+                url=AnyHttpUrl("https://example.com"),
             )
         error_detail = exc_info.exception.errors()[0]
         expected_type = "string_too_short"
@@ -85,6 +89,7 @@ class FilmCreateTestCase(TestCase):
                 name="Some Film",
                 year=2025,
                 description="Some description",
+                url=AnyHttpUrl("https://example.com"),
             )
 
 
@@ -94,6 +99,7 @@ class FilmUpdateTestCase(TestCase):
             name="Some Film",
             year=2022,
             description="Some description",
+            url=AnyHttpUrl("https://example.com"),
         )
         film = Film(
             **film_in.model_dump(),
@@ -112,6 +118,7 @@ class FilmUpdatePartialTestCase(TestCase):
             name="Some Film",
             year=2022,
             description="Some description",
+            url=AnyHttpUrl("https://example.com"),
         )
         film_in = FilmUpdatePartial(
             description="New description",
@@ -124,6 +131,7 @@ class FilmUpdatePartialTestCase(TestCase):
                 film.description if not film_in.description else film_in.description
             ),
             rating=0,
+            url=film.url,
         )
         self.assertEqual(
             film.name,

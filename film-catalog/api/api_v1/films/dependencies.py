@@ -5,38 +5,29 @@ from fastapi import HTTPException, Request, status
 from fastapi.params import Depends
 from fastapi.security import (
     HTTPAuthorizationCredentials,
-    HTTPBasic,
     HTTPBasicCredentials,
     HTTPBearer,
 )
 
-from api.api_v1.auth.services import redis_tokens, redis_users
+from dependencies.auth import UNSAFE_METHODS, user_basic_auth, validate_basic_auth
+from dependencies.films import GetFilmsStorage
 from schemas.film import Film
-from storage.films.crud import storage
+from services.auth import redis_tokens
 
 log = logging.getLogger(__name__)
 
-UNSAFE_METHODS = frozenset(
-    {
-        "POST",
-        "PUT",
-        "PATCH",
-        "DELETE",
-    },
-)
+
 static_api_token = HTTPBearer(
     scheme_name="Static API token",
     description="Your API token for developer portal",
     auto_error=False,
 )
-user_basic_auth = HTTPBasic(
-    scheme_name="User Basic Auth",
-    description="Basic username and password auth",
-    auto_error=False,
-)
 
 
-async def prefetch_film(slug: str) -> Film:
+async def prefetch_film(
+    slug: str,
+    storage: GetFilmsStorage,
+) -> Film:
     film = storage.get_by_slug(slug)
     if film:
         return film
@@ -73,34 +64,6 @@ def check_api_token_for_unsafe_methods(
             detail="API token required",
         )
     validate_api_token(api_token)
-
-
-def validate_basic_auth(
-    credentials: HTTPBasicCredentials | None,
-) -> None:
-    if credentials and redis_users.validate_user_password(
-        credentials.username,
-        credentials.password,
-    ):
-        return
-    raise HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="User credentials required. Invalid username or password",
-        headers={"WWW-Authenticate": "Basic"},
-    )
-
-
-def user_basic_auth_required_for_unsafe_methods(
-    request: Request,
-    credentials: Annotated[
-        HTTPBasicCredentials | None,
-        Depends(user_basic_auth),
-    ] = None,
-) -> None:
-    log.info("User credentials %s", credentials)
-    if request.method not in UNSAFE_METHODS:
-        return
-    validate_basic_auth(credentials)
 
 
 def api_token_or_user_basic_auth_required_for_unsafe_methods(

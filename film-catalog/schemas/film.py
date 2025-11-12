@@ -2,7 +2,7 @@ from datetime import UTC, datetime
 from typing import Annotated
 
 from annotated_types import Interval, Len, MaxLen
-from pydantic import BaseModel
+from pydantic import AnyHttpUrl, BaseModel
 
 from core.config import DESCRIPTION_MAX_LENGTH
 
@@ -24,6 +24,7 @@ class FilmBase(BaseModel):
     name: str
     description: str
     year: int
+    url: AnyHttpUrl
 
 
 class Film(FilmBase):
@@ -47,7 +48,7 @@ class FilmCreate(FilmBase):
     ]
     name: NameString
     year: YearNumber
-    description: DescriptionString
+    description: DescriptionString = "Foo"
 
 
 class FilmUpdate(FilmBase):

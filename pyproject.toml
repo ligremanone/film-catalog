@@ -5,23 +5,24 @@ description = "Add your description here"
 requires-python = ">=3.13"
 dependencies = [
     "art>=6.5",
-    "fastapi[standard]>=0.115.12",
+    "fastapi[standard]>=0.121.1",
     "jinja2>=3.1.6",
-    "pydantic-settings[yaml]>=2.10.1",
-    "redis[hiredis]>=6.2.0",
-    "typer>=0.15.3",
-    "uvicorn>=0.34.2",
+    "pydantic-settings[yaml]>=2.12.0",
+    "redis[hiredis]>=7.0.1",
+    "typer>=0.20.0",
+    "uvicorn>=0.38.0",
 ]
 
 [dependency-groups]
 dev = [
-    "coverage>=7.9.2",
+    "coverage>=7.11.2",
     "httpx>=0.28.1",
-    "mypy>=1.16.1",
-    "pre-commit>=4.2.0",
-    "pytest>=8.4.1",
-    "pytest-cov>=6.2.1",
-    "ruff>=0.12.1",
+    "mypy>=1.18.2",
+    "pre-commit>=4.4.0",
+    "pytest>=9.0.0",
+    "pytest-cov>=7.0.0",
+    "python-multipart>=0.0.20",
+    "ruff>=0.14.4",
 ]
 
 [tool.uv]

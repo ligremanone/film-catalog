@@ -4,6 +4,7 @@ from collections.abc import Generator
 from os import getenv
 
 import pytest
+from pydantic import AnyHttpUrl
 
 from schemas.film import Film, FilmCreate
 from storage.films.crud import storage
@@ -21,6 +22,7 @@ def check_testing_env() -> None:
 
 def build_film_create(
     slug: str,
+    url: AnyHttpUrl,
     description: str = "Some description",
     name: str = "Some Film",
 ) -> FilmCreate:
@@ -29,12 +31,14 @@ def build_film_create(
         name=name,
         description=description,
         year=2025,
+        url=url,
     )
 
 
 def build_film_create_random_slug(
     description: str = "Some description",
     name: str = "Some Film",
+    url: AnyHttpUrl = "https://example.com",
 ) -> FilmCreate:
     return build_film_create(
         slug="".join(
@@ -45,6 +49,7 @@ def build_film_create_random_slug(
         ),
         description=description,
         name=name,
+        url=url,
     )
 
 
@@ -52,11 +57,13 @@ def create_film(
     slug: str,
     description: str = "Some description",
     name: str = "Some Film",
+    url: AnyHttpUrl = "https://example.com",
 ) -> Film:
     new_film_in = build_film_create(
         slug,
         description=description,
         name=name,
+        url=url,
     )
     return storage.create(new_film_in)
 
