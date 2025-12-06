@@ -6,10 +6,13 @@ from pydantic import ValidationError
 
 from dependencies.films import GetFilmsStorage
 from schemas.film import FilmCreate
+from services.films import FormResponseHelper
 from storage.films.exceptions import FilmAlreadyExistsError
 from templating import templates
 
 router = APIRouter(prefix="/create")
+
+form_response = FormResponseHelper(model=FilmCreate, template_name="films/create.html")
 
 
 def create_view_validation_response(
@@ -40,14 +43,7 @@ def format_pydantic_errors(error: ValidationError) -> dict[str, str]:
 
 @router.get("/", name="film:create-view")
 def get_page_create_film(request: Request) -> HTMLResponse:
-    context: dict[str, Any] = {}
-    model_schema = FilmCreate.model_json_schema()
-    context.update(model_schema=model_schema)
-    return templates.TemplateResponse(
-        request=request,
-        name="films/create.html",
-        context=context,
-    )
+    return form_response.render(request)
 
 
 @router.post("/", name="film:create", response_model=None)
@@ -59,11 +55,11 @@ async def create_film(
         try:
             new_film = FilmCreate.model_validate(film_form)
         except ValidationError as err:
-            errors = format_pydantic_errors(err)
-            return create_view_validation_response(
+            return form_response.render(
                 request=request,
                 form_data=film_form,
-                errors=errors,
+                pydantic_error=err,
+                form_validated=True,
             )
     try:
         storage.create_or_raise_if_exists(new_film)
@@ -74,8 +70,9 @@ async def create_film(
             url=request.url_for("films:list"),
             status_code=status.HTTP_303_SEE_OTHER,
         )
-    return create_view_validation_response(
+    return form_response.render(
         request=request,
         form_data=new_film,
         errors=errors,
+        form_validated=True,
     )

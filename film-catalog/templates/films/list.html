@@ -14,6 +14,7 @@
 				<th scope="col">Year</th>
 				<th scope="col">Rating</th>
 				<th scope="col">URL</th>
+				<th scope="col">Actions</th>
 			</tr>
 			</thead>
 			<tbody>
@@ -24,6 +25,12 @@
 					<td>{{ film.year }}</td>
 					<td>{{ film.rating }}</td>
 					<td><a href="{{ film.url }}" target="_blank">{{ film.url }}</a></td>
+					<td>
+						<div class="btn-group">
+							<a href="{{ url_for('film:update-view', slug=film.slug) }}" class="btn btn-outline-primary">Edit</a>
+							<a href="#" class="btn btn-outline-danger">Delete</a>
+						</div>
+					</td>
 				</tr>
 			{% endfor %}
 			</tbody>

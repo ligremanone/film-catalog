@@ -10,8 +10,6 @@ from fastapi.security import (
 )
 
 from dependencies.auth import UNSAFE_METHODS, user_basic_auth, validate_basic_auth
-from dependencies.films import GetFilmsStorage
-from schemas.film import Film
 from services.auth import redis_tokens
 
 log = logging.getLogger(__name__)
@@ -22,20 +20,6 @@ static_api_token = HTTPBearer(
     description="Your API token for developer portal",
     auto_error=False,
 )
-
-
-async def prefetch_film(
-    slug: str,
-    storage: GetFilmsStorage,
-) -> Film:
-    film = storage.get_by_slug(slug)
-    if film:
-        return film
-
-    raise HTTPException(
-        status_code=status.HTTP_404_NOT_FOUND,
-        detail=f"Film with {slug!r} slug not found",
-    )
 
 
 def validate_api_token(

@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% from "films/macro/form.html" import render_form with context %}
+{% block title %}
+	Update film {{ film.slug }}
+{% endblock %}
+{% block main %}
+	<h1>Update film <code>{{ film.slug }}</code></h1>
+	{{ render_form(action = url_for('film:update', slug=film.slug), btn_text = 'Update!') }}
+{% endblock %}

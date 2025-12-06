@@ -1,8 +1,6 @@
-from typing import Annotated
+from fastapi import APIRouter, status
 
-from fastapi import APIRouter, Depends, status
-
-from api.api_v1.films.dependencies import prefetch_film
+from dependencies.films import FilmBySlug
 from schemas.film import Film, FilmRead, FilmUpdate, FilmUpdatePartial
 from storage.films.crud import storage
 
@@ -21,8 +19,6 @@ router = APIRouter(
         },
     },
 )
-
-FilmBySlug = Annotated[Film, Depends(prefetch_film)]
 
 
 @router.get(

@@ -38,7 +38,7 @@ def build_film_create(
 def build_film_create_random_slug(
     description: str = "Some description",
     name: str = "Some Film",
-    url: AnyHttpUrl = "https://example.com",
+    url: str = "https://example.com",
 ) -> FilmCreate:
     return build_film_create(
         slug="".join(
@@ -49,7 +49,7 @@ def build_film_create_random_slug(
         ),
         description=description,
         name=name,
-        url=url,
+        url=AnyHttpUrl(url),
     )
 
 
@@ -57,13 +57,13 @@ def create_film(
     slug: str,
     description: str = "Some description",
     name: str = "Some Film",
-    url: AnyHttpUrl = "https://example.com",
+    url: str = "https://example.com",
 ) -> Film:
     new_film_in = build_film_create(
         slug,
         description=description,
         name=name,
-        url=url,
+        url=AnyHttpUrl(url),
     )
     return storage.create(new_film_in)
 
