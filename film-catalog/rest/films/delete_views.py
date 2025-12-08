@@ -1,19 +1,18 @@
-from fastapi import APIRouter, Request, status
-from fastapi.responses import RedirectResponse
+from fastapi import APIRouter, status
+from fastapi.responses import Response
 
 from dependencies.films import FilmBySlug, GetFilmsStorage
 
 router = APIRouter(prefix="/{slug}/delete")
 
 
-@router.post("/", name="film:delete")
+@router.delete("/", name="film:delete")
 def delete_film(
-    request: Request,
     storage: GetFilmsStorage,
     film: FilmBySlug,
-) -> RedirectResponse:
+) -> Response:
     storage.delete(film)
-    return RedirectResponse(
-        url=request.url_for("films:list"),
-        status_code=status.HTTP_303_SEE_OTHER,
+    return Response(
+        status_code=status.HTTP_200_OK,
+        content="",
     )

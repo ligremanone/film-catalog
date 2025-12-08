@@ -49,11 +49,16 @@
 										Are you sure you want to delete {{ film.slug }}?
 									</div>
 									<div class="modal-footer">
-										<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-										<form action="{{ url_for('film:delete', slug=film.slug) }}" method="post">
-											<button type="submit" class="btn btn-danger">Yes
-											</button>
-										</form>
+										<button type="button"
+										        class="btn btn-secondary" data-bs-dismiss="modal">Close
+										</button>
+										<button hx-delete="{{ url_for('film:delete', slug=film.slug) }}"
+										        hx-target="closest tr"
+										        hx-swap="outerHTML swap:1s"
+										        type="submit"
+										        data-bs-dismiss="modal"
+										        class="btn btn-danger">Yes
+										</button>
 									</div>
 								</div>
 							</div>
