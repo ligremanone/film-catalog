@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Request, status
 from fastapi.responses import HTMLResponse, RedirectResponse
+from pydantic import ValidationError
 
 from dependencies.films import FilmBySlug, GetFilmsStorage
 from schemas.film import FilmUpdate
@@ -30,8 +31,17 @@ async def create_film(
     film: FilmBySlug,
 ) -> RedirectResponse | HTMLResponse:
     async with request.form() as film_form:
-        film_from_form = FilmUpdate.model_validate(film_form)
-    storage.update(film, film_from_form)
+        try:
+            film_in = FilmUpdate.model_validate(film_form)
+        except ValidationError as err:
+            return form_response.render(
+                request=request,
+                form_data=film_form,
+                pydantic_error=err,
+                form_validated=True,
+                film=film,
+            )
+    storage.update(film, film_in)
     return RedirectResponse(
         url=request.url_for("films:list"),
         status_code=status.HTTP_303_SEE_OTHER,

@@ -54,7 +54,7 @@ class FilmCreate(FilmBase):
 class FilmUpdate(FilmBase):
     name: NameString
     year: YearNumber
-    description: DescriptionString
+    description: DescriptionString = ""
 
 
 class FilmUpdatePartial(BaseModel):

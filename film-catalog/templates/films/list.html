@@ -28,7 +28,35 @@
 					<td>
 						<div class="btn-group">
 							<a href="{{ url_for('film:update-view', slug=film.slug) }}" class="btn btn-outline-primary">Edit</a>
-							<a href="#" class="btn btn-outline-danger">Delete</a>
+							<button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
+							        data-bs-target="#modal-confirm-delete-{{ film.slug }}">
+								Delete
+							</button>
+						</div>
+
+
+						<div class="modal fade" id="modal-confirm-delete-{{ film.slug }}" tabindex="-1"
+						     aria-labelledby="modal-confirm-delete-{{ film.slug }}-label"
+						     aria-hidden="true">
+							<div class="modal-dialog modal-dialog-centered">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h1 class="modal-title fs-5" id="modal-confirm-delete-{{ film.slug }}-label">Confirm
+											delete {{ film.slug }}</h1>
+										<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+									</div>
+									<div class="modal-body">
+										Are you sure you want to delete {{ film.slug }}?
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+										<form action="{{ url_for('film:delete', slug=film.slug) }}" method="post">
+											<button type="submit" class="btn btn-danger">Yes
+											</button>
+										</form>
+									</div>
+								</div>
+							</div>
 						</div>
 					</td>
 				</tr>
