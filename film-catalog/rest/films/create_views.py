@@ -9,6 +9,7 @@ from schemas.film import FilmCreate
 from services.films import FormResponseHelper
 from storage.films.exceptions import FilmAlreadyExistsError
 from templating import templates
+from utils.flash_messages import flash
 
 router = APIRouter(prefix="/create")
 
@@ -66,11 +67,16 @@ async def create_film(
     except FilmAlreadyExistsError:
         errors = {"slug": f"Film with slug {new_film.slug!r} already exists"}
     else:
+        flash(
+            request=request,
+            message=f"Successfully created film {new_film.slug!r}",
+            category="success",
+        )
         return RedirectResponse(
             url=request.url_for("films:list"),
             status_code=status.HTTP_303_SEE_OTHER,
         )
-    request.session["message"] = f"Last created film with slug {new_film.slug!r}"
+
     return form_response.render(
         request=request,
         form_data=new_film,

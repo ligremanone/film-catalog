@@ -4,11 +4,11 @@
 {% endblock %}
 {% block main %}
 	<h1>Films list</h1>
-	{% if request.session.get('message') %}
-		<div class="alert alert-success" role="alert">
-			{{ request.session.pop('message') }}
+	{% for message in get_flash_messages(request) %}
+		<div class="alert alert-{{ message.category }}">
+			{{ message.message }}
 		</div>
-	{% endif %}
+	{% endfor %}
 	<h3><a class="btn btn-outline-primary" href="{{ url_for('film:create') }}">Create new film</a></h3>
 	{% if films %}
 		<table class="table table-hover">

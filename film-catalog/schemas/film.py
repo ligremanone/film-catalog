@@ -4,8 +4,7 @@ from typing import Annotated
 from annotated_types import Interval, Len, MaxLen
 from pydantic import AnyHttpUrl, BaseModel
 
-from core.config import DESCRIPTION_MAX_LENGTH
-
+DESCRIPTION_MAX_LENGTH = 200
 NameString = Annotated[
     str,
     Len(min_length=1, max_length=100),

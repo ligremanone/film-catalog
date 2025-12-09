@@ -17,9 +17,6 @@ LOG_FORMAT: str = (
 )
 
 
-DESCRIPTION_MAX_LENGTH = 200
-
-
 class LoggingConfig(BaseModel):
     log_level_name: Literal[
         "DEBUG",
