@@ -163,3 +163,4 @@ cython_debug/
 /app/certs/
 db.json
 .secrets
+/film-catalog/config.local.yaml

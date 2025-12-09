@@ -5,3 +5,5 @@ film-catalog:
     db:
       default: 1
       tokens_db: 10
+  session:
+    secret_key:

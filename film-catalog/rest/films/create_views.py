@@ -70,6 +70,7 @@ async def create_film(
             url=request.url_for("films:list"),
             status_code=status.HTTP_303_SEE_OTHER,
         )
+    request.session["message"] = f"Last created film with slug {new_film.slug!r}"
     return form_response.render(
         request=request,
         form_data=new_film,

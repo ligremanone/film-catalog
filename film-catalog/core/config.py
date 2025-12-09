@@ -67,11 +67,15 @@ class RedisConfig(BaseModel):
     names: RedisNamesConfig = RedisNamesConfig()
 
 
+class SessionConfig(BaseModel):
+    secret_key: str
+
+
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         case_sensitive=False,
         env_file=(BASE_DIR / ".env.template", BASE_DIR / ".env"),
-        yaml_file=(BASE_DIR / "config.default.yaml", BASE_DIR / "config.yaml"),
+        yaml_file=(BASE_DIR / "config.default.yaml", BASE_DIR / "config.local.yaml"),
         yaml_config_section="film-catalog",
         env_nested_delimiter="__",
         env_prefix="FILM_CATALOG__",
@@ -110,6 +114,7 @@ class Settings(BaseSettings):
 
     logging: LoggingConfig = LoggingConfig()
     redis: RedisConfig = RedisConfig()
+    session: SessionConfig
 
 
 settings = Settings()
